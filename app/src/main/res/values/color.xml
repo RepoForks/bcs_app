@@ -1,0 +1,6 @@
+ <resources>
+        <!--<color name="ColorPrimary">#FF5722</color>-->
+        <!--<color name="ColorPrimaryDark">#E64A19</color>-->
+     <color name="ColorPrimary">#0079ff</color> <!--Toolbar / actionbar farve -->
+     <color name="ColorPrimaryDark">#0264ff</color> <!--Navigationbar farve -->
+ </resources>

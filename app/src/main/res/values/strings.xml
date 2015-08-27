@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Business Card Scanner</string>
+    <string name="login_title">Login</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_overview">OverviewActivity</string>
+</resources>
