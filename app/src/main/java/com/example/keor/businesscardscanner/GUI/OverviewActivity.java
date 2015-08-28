@@ -93,7 +93,7 @@ public class OverviewActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_search) {
-            txtSearch.getVisibility() == 1 ? txtSearch.setVisibility(View.GONE) : txtSearch.setVisibility(View.VISIBLE);
+            //txtSearch.getVisibility() == 1 ? txtSearch.setVisibility(View.GONE) : txtSearch.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Search items ", Toast.LENGTH_SHORT).show();
             return true;
         }
