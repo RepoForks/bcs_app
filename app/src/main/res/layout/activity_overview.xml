@@ -3,18 +3,22 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.keor.businesscardscanner.GUI.OverviewActivity">
+    tools:context="com.example.keor.businesscardscanner.GUI.OverviewActivity"
+    android:animateLayoutChanges="true">
+
 
     <include
         android:id="@+id/tool_bar"
         layout="@layout/tool_bar"></include>
 
     <EditText
-        android:id="@+id/txtxSearch"
+        android:id="@+id/txtSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/txtSearchHint"
         android:gravity="center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_marginBottom="20dp"/>
 
     <TextView android:text="@string/lstImages" android:layout_width="wrap_content"

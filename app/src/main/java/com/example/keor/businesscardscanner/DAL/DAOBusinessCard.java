@@ -72,7 +72,6 @@ public class DAOBusinessCard {
         if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
         }
-
         return cards;
     }
 

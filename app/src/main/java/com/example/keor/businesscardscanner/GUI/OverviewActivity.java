@@ -1,17 +1,23 @@
 package com.example.keor.businesscardscanner.GUI;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.keor.businesscardscanner.Controller.CardController;
 import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
@@ -25,6 +31,7 @@ public class OverviewActivity extends AppCompatActivity {
     DAOBusinessCard _daoCard;
     ListView listCards;
     EditText txtSearch;
+    CardController cc;
     ArrayList<BEBusinessCard> cards;
 
 
@@ -38,9 +45,9 @@ public class OverviewActivity extends AppCompatActivity {
         initSettings();
         _daoCard = new DAOBusinessCard(this);
         cards = _daoCard.getAllCards();
-        adapter = new CardAdapter(this, R.layout.cell,cards);
-        listCards.setAdapter(adapter);
+        populateList(cards);
         txtSearch.setVisibility(View.GONE);
+        cc = CardController.getInstance(this);
     }
 
     private void setListeners() {
@@ -50,6 +57,37 @@ public class OverviewActivity extends AppCompatActivity {
                 onCardClicked(parent, view, position, id);
             }
         });
+        txtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                populateList(cc.getCardsByInput(txtSearch.getText().toString().toLowerCase()));
+            }
+        });
+
+        txtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(v.getId() == R.id.txtSearch && !hasFocus) {
+                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        });
+    }
+
+    private void populateList(ArrayList<BEBusinessCard> c) {
+        adapter = new CardAdapter(this, R.layout.cell,c);
+        listCards.setAdapter(adapter);
     }
 
     private void onCardClicked(AdapterView<?> parent, View view, int position, long id) {
@@ -63,7 +101,7 @@ public class OverviewActivity extends AppCompatActivity {
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         listCards = (ListView) findViewById(R.id.lstCards);
-        txtSearch = (EditText) findViewById(R.id.txtxSearch);
+        txtSearch = (EditText) findViewById(R.id.txtSearch);
     }
 
     private void initToolbar() {
@@ -93,8 +131,7 @@ public class OverviewActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_search) {
-            //txtSearch.getVisibility() == 1 ? txtSearch.setVisibility(View.GONE) : txtSearch.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Search items ", Toast.LENGTH_SHORT).show();
+            doSearchAnimation();
             return true;
         }
         if (id == R.id.action_select_delete) {
@@ -102,5 +139,17 @@ public class OverviewActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doSearchAnimation() {
+        if (txtSearch.getVisibility() == View.GONE) {
+            txtSearch.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left));
+            txtSearch.setVisibility(View.VISIBLE);
+        }
+        else {
+            txtSearch.startAnimation(AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right));
+            txtSearch.setText("");
+            txtSearch.setVisibility(View.GONE);
+        }
     }
 }
