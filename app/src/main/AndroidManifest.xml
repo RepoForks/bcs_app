@@ -20,6 +20,11 @@
             android:name=".GUI.OverviewActivity"
             android:label="@string/title_activity_overview" >
         </activity>
+        <activity
+            android:name=".GUI.ScanActivity"
+            android:label="@string/title_activity_scan" >
+        </activity>
     </application>
-
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 </manifest>
