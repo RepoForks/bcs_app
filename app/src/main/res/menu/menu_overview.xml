@@ -2,6 +2,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.keor.businesscardscanner.GUI.OverviewActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/action_select_delete"
+
+        android:title="Delete items"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_take_picture"
+        android:orderInCategory="300"
+        android:title="Scan a card"
+        android:icon="@drawable/ic_camera"
+        app:showAsAction="ifRoom"></item>
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="300"
+        android:title="Search your cards"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom"></item>
 </menu>

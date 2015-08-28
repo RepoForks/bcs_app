@@ -6,29 +6,66 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
+import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
+
+import java.util.ArrayList;
 
 public class OverviewActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    CardAdapter adapter;
+    DAOBusinessCard _daoCard;
+    ListView listCards;
+    ArrayList<BEBusinessCard> cards;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         findViews();
+        setListeners();
         initToolbar();
+        initSettings();
+        _daoCard = new DAOBusinessCard(this);
+        cards = _daoCard.getAllCards();
+        adapter = new CardAdapter(this, R.layout.cell,cards);
+        listCards.setAdapter(adapter);
+    }
+
+    private void setListeners() {
+        listCards.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onCardClicked(parent, view, position, id);
+            }
+        });
+    }
+
+    private void onCardClicked(AdapterView<?> parent, View view, int position, long id) {
+Toast.makeText(this, "Clicked: " + cards.get(position).getFullname(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void initSettings() {
+
     }
 
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        listCards = (ListView) findViewById(R.id.lstCards);
     }
 
     private void initToolbar() {
         toolbar.setTitle("Overview");
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.drawable.ic_login);
+        toolbar.setNavigationIcon(R.drawable.ic_overview);
         setSupportActionBar(toolbar);
     }
 
@@ -47,7 +84,16 @@ public class OverviewActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_take_picture) {
+            Toast.makeText(this, "Take picture intent", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.action_search) {
+            Toast.makeText(this, "Search items ", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.action_select_delete) {
+            Toast.makeText(this, "select delete ", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
