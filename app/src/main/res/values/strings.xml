@@ -16,5 +16,6 @@
     <string name="lblPassword">Password:</string>
     <string name="btnTxtRegister">Register</string>
     <string name="txtSearchHint"><i>Search through business cards</i></string>
+    <string name="title_activity_card_detail">CardDetailActivity</string>
 
 </resources>

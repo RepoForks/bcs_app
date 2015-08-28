@@ -40,9 +40,9 @@ public class OverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         findViews();
+        initSettings();
         setListeners();
         initToolbar();
-        initSettings();
         _daoCard = new DAOBusinessCard(this);
         cards = _daoCard.getAllCards();
         populateList(cards);
@@ -54,9 +54,21 @@ public class OverviewActivity extends AppCompatActivity {
         listCards.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onCardClicked(parent, view, position, id);
+                onCardClicked(position);
             }
         });
+
+        /*listCards.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView parentView, View childView,
+                                       int position, long id) {
+                makeShortToast("Fullname: " + cards.get(position).getFullname());
+            }
+
+            public void onNothingSelected(AdapterView parentView) {
+
+            }
+        });*/
+
         txtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -70,7 +82,8 @@ public class OverviewActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                populateList(cc.getCardsByInput(txtSearch.getText().toString().toLowerCase()));
+                cards = cc.getCardsByInput(txtSearch.getText().toString().toLowerCase());
+                populateList(cards);
             }
         });
 
@@ -85,17 +98,20 @@ public class OverviewActivity extends AppCompatActivity {
         });
     }
 
+    private void makeShortToast(String s) {
+        Toast.makeText(this,s,Toast.LENGTH_SHORT).show();
+    }
+
     private void populateList(ArrayList<BEBusinessCard> c) {
         adapter = new CardAdapter(this, R.layout.cell,c);
         listCards.setAdapter(adapter);
     }
 
-    private void onCardClicked(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "Clicked: " + cards.get(position).getFullname(), Toast.LENGTH_SHORT).show();
+    private void onCardClicked(int position) {
+        Toast.makeText(this, "Clicked: ", Toast.LENGTH_SHORT).show();
     }
 
     private void initSettings() {
-
     }
 
     private void findViews() {
