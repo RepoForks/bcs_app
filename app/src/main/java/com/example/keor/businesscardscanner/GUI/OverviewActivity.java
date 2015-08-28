@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class OverviewActivity extends AppCompatActivity {
     CardAdapter adapter;
     DAOBusinessCard _daoCard;
     ListView listCards;
+    EditText txtSearch;
     ArrayList<BEBusinessCard> cards;
 
 
@@ -38,6 +40,7 @@ public class OverviewActivity extends AppCompatActivity {
         cards = _daoCard.getAllCards();
         adapter = new CardAdapter(this, R.layout.cell,cards);
         listCards.setAdapter(adapter);
+        txtSearch.setVisibility(View.GONE);
     }
 
     private void setListeners() {
@@ -50,7 +53,7 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     private void onCardClicked(AdapterView<?> parent, View view, int position, long id) {
-Toast.makeText(this, "Clicked: " + cards.get(position).getFullname(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Clicked: " + cards.get(position).getFullname(), Toast.LENGTH_SHORT).show();
     }
 
     private void initSettings() {
@@ -60,6 +63,7 @@ Toast.makeText(this, "Clicked: " + cards.get(position).getFullname(), Toast.LENG
     private void findViews() {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         listCards = (ListView) findViewById(R.id.lstCards);
+        txtSearch = (EditText) findViewById(R.id.txtxSearch);
     }
 
     private void initToolbar() {
@@ -89,6 +93,7 @@ Toast.makeText(this, "Clicked: " + cards.get(position).getFullname(), Toast.LENG
             return true;
         }
         if (id == R.id.action_search) {
+            txtSearch.getVisibility() == 1 ? txtSearch.setVisibility(View.GONE) : txtSearch.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Search items ", Toast.LENGTH_SHORT).show();
             return true;
         }
