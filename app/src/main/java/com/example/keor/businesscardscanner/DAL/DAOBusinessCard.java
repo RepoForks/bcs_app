@@ -20,7 +20,8 @@ public class DAOBusinessCard {
     SQLiteDatabase _db;
     SQLiteStatement _sql;
     String _INSERT = "INSERT INTO " + DAConstants.TABLE_CARD + "(Firstname, Lastname, Address, PhoneNumber, Country, City, Company, Title, Homepage, Fax, Postal, Email, Other, EncodedImage, CreatedDate, CreatedUserId, IsDeleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    String _UPDATE = "";
+    String _UPDATE = "UPDATE " + DAConstants.TABLE_CARD + " SET Firstname=?, Lastname=?, Address=?, PhoneNumber=?, Country=?, City=?, Company=?, Title=?, Homepage=?, Fax=?, Postal=?, Email=?, Other=?, EncodedImage=? WHERE Id=?";
+    String _DELETE = "UPDATE " + DAConstants.TABLE_CARD + " SET IsDeleted=? WHERE Id=?";
 
     SimpleDateFormat sdf;
 
@@ -49,8 +50,8 @@ public class DAOBusinessCard {
         _sql.bindString(7, card.getCompany());
         _sql.bindString(8, card.getTitle());
         _sql.bindString(9, card.getHomepage());
-        _sql.bindString(10, card.getFax());
-        _sql.bindString(11, card.getPostal());
+        _sql.bindString(10, card.getPostal());
+        _sql.bindString(11, card.getFax());
         _sql.bindString(12, card.getEmail());
         _sql.bindString(13, card.getOther());
         _sql.bindString(14, card.getEncodedImage());
@@ -61,12 +62,39 @@ public class DAOBusinessCard {
         return _sql.executeInsert();
     }
 
+    public long updateCard(BEBusinessCard card) {
+        _sql = _db.compileStatement(_UPDATE);
+        _sql.bindString(1, card.getFirstname());
+        _sql.bindString(2, card.getLastname());
+        _sql.bindString(3, card.getAddress());
+        _sql.bindString(4, card.getPhonenumber());
+        _sql.bindString(5, card.getCountry());
+        _sql.bindString(6, card.getCity());
+        _sql.bindString(7, card.getCompany());
+        _sql.bindString(8, card.getTitle());
+        _sql.bindString(9, card.getHomepage());
+        _sql.bindString(10, card.getPostal());
+        _sql.bindString(11, card.getFax());
+        _sql.bindString(12, card.getEmail());
+        _sql.bindString(13, card.getOther());
+        _sql.bindString(14, card.getEncodedImage());
+        _sql.bindString(15, ""+card.getId());
+        return _sql.executeUpdateDelete();
+    }
+
+    public long deleteCard(BEBusinessCard card) {
+        _sql = _db.compileStatement(_DELETE);
+        _sql.bindString(1, ""+1);
+        _sql.bindString(2, ""+card.getId());
+        return _sql.executeUpdateDelete();
+    }
+
     public ArrayList<BEBusinessCard> getAllCards() {
         ArrayList<BEBusinessCard> cards = new ArrayList<>();
-        Cursor cursor = _db.query(DAConstants.TABLE_CARD, new String[]{"Id", "Firstname", "Lastname", "Address", "PhoneNumber", "Country", "City", "Company", "Title", "Homepage", "Fax", "Postal", "Email", "Other", "EncodedImage", "CreatedDate", "CreatedUserId", "IsDeleted"}, null, null, null, null, "Firstname desc");
+        Cursor cursor = _db.query(DAConstants.TABLE_CARD, new String[]{"Id", "Firstname", "Lastname", "Address", "PhoneNumber", "Country", "City", "Company", "Title", "Homepage", "Fax", "Postal", "Email", "Other", "EncodedImage", "CreatedDate", "CreatedUserId", "IsDeleted"}, "IsDeleted=?", new String[]{"" + 0}, null, null, "Firstname desc");
         if (cursor.moveToFirst()) {
             do {
-                    cards.add(new BEBusinessCard(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),  cursor.getString(4), cursor.getString(5), cursor.getString(6),  cursor.getString(7),  cursor.getString(8),  cursor.getString(9),  cursor.getString(10), cursor.getString(11), cursor.getString(12), cursor.getString(13), cursor.getString(14), cursor.getString(15), cursor.getInt(16), (cursor.getInt(17)>0)));
+                cards.add(new BEBusinessCard(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),  cursor.getString(4), cursor.getString(5), cursor.getString(6),  cursor.getString(7),  cursor.getString(8),  cursor.getString(9),  cursor.getString(10), cursor.getString(11), cursor.getString(12), cursor.getString(13), cursor.getString(14), cursor.getString(15), cursor.getInt(16), (cursor.getInt(17)>0)));
             } while (cursor.moveToNext());
         }
         if (cursor != null && !cursor.isClosed()) {

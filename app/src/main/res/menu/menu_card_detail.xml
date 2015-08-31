@@ -2,6 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.keor.businesscardscanner.GUI.CardDetailActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <!--<item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />-->
+
+    <item
+        android:id="@+id/action_save_card"
+        android:orderInCategory="300"
+        android:title="Save business card"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="ifRoom"></item>
+
 </menu>

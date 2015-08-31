@@ -1,9 +1,11 @@
 package com.example.keor.businesscardscanner.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by keor on 27-08-2015.
  */
-public class BEBusinessCard {
+public class BEBusinessCard implements Serializable{
 
     private int m_id;
     private String m_firstname;
@@ -44,7 +46,6 @@ public class BEBusinessCard {
         m_fax = fax;
         m_email = email;
         m_other = other;
-
         m_encodedImage = encodedImage;
         m_createdDate = createdDate;
         m_createdUserId = createdUserId;

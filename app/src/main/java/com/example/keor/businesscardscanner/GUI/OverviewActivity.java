@@ -1,9 +1,12 @@
 package com.example.keor.businesscardscanner.GUI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
+import android.support.v7.internal.widget.AdapterViewCompat.OnItemClickListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +31,6 @@ public class OverviewActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     CardAdapter adapter;
-    DAOBusinessCard _daoCard;
     ListView listCards;
     EditText txtSearch;
     CardController cc;
@@ -39,35 +41,27 @@ public class OverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        cc = CardController.getInstance(this);
+        cards = cc.getCards();
         findViews();
         initSettings();
         setListeners();
         initToolbar();
-        _daoCard = new DAOBusinessCard(this);
-        cards = _daoCard.getAllCards();
         populateList(cards);
         txtSearch.setVisibility(View.GONE);
-        cc = CardController.getInstance(this);
     }
 
     private void setListeners() {
         listCards.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onCardClicked(position);
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), CardDetailActivity.class);
+                intent.putExtra("CARD", cards.get(position));
+                startActivityForResult(intent, 1);
+                //makeShortToast("Full name: " + cards.get(position).getFullname());
             }
         });
-
-        /*listCards.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView parentView, View childView,
-                                       int position, long id) {
-                makeShortToast("Fullname: " + cards.get(position).getFullname());
-            }
-
-            public void onNothingSelected(AdapterView parentView) {
-
-            }
-        });*/
 
         txtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -90,25 +84,23 @@ public class OverviewActivity extends AppCompatActivity {
         txtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(v.getId() == R.id.txtSearch && !hasFocus) {
-                    InputMethodManager imm =  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (v.getId() == R.id.txtSearch && !hasFocus) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         });
     }
 
-    private void makeShortToast(String s) {
-        Toast.makeText(this,s,Toast.LENGTH_SHORT).show();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        cards = cc.getCards();
+        populateList(cards);
     }
 
     private void populateList(ArrayList<BEBusinessCard> c) {
         adapter = new CardAdapter(this, R.layout.cell,c);
         listCards.setAdapter(adapter);
-    }
-
-    private void onCardClicked(int position) {
-        Toast.makeText(this, "Clicked: ", Toast.LENGTH_SHORT).show();
     }
 
     private void initSettings() {

@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
+import com.example.keor.businesscardscanner.Model.BEUser;
+
 /**
  * Created by keor on 27-08-2015.
  */
@@ -33,5 +35,16 @@ public class DAOUser {
             return true;
         }
         return false;
+    }
+
+    public BEUser getUserById(int id) {
+        Cursor cursor = _db.query(DAConstants.TABLE_CARD, new String[]{"Id", "Username", "Password"}, "Id=?", new String[]{"" + id}, null, null, null);
+        if (cursor.moveToFirst()) {
+            return new BEUser(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return null;
     }
 }

@@ -4,7 +4,6 @@
     tools:context="com.example.keor.businesscardscanner.GUI.OverviewActivity">
 
     <item android:id="@+id/action_select_delete"
-
         android:title="Delete items"
         android:orderInCategory="100"
         app:showAsAction="never" />

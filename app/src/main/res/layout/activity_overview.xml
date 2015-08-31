@@ -26,6 +26,7 @@
         android:layout_gravity="center"/>
     <ListView
         android:id="@+id/lstCards"
+        android:clickable="true"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginLeft="15dp"
