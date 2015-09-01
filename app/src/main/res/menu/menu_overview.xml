@@ -3,10 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.keor.businesscardscanner.GUI.OverviewActivity">
 
+    <!--
     <item android:id="@+id/action_select_delete"
         android:title="Delete items"
         android:orderInCategory="100"
         app:showAsAction="never" />
+        -->
 
     <item
         android:id="@+id/action_take_picture"

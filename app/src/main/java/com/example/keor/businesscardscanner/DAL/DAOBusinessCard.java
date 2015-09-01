@@ -33,8 +33,8 @@ public class DAOBusinessCard {
 
         if (getAllCards().size() == 0){
             BEBusinessCard card = new BEBusinessCard("André","Thy", "Mølleparkvej 2 2.6", "+4522410745", "Denmark", "Esbjerg", "Blue Water Shipping", "Software developer", "www.bws.dk", "6715", "", "2809thy@gmail.com","","","",1,false);
-            BEBusinessCard card2 = new BEBusinessCard("Jakob","Jensen", "Holmevej 41", "+45 75 41 21 36", "Denmark", "Vejen", "Red Light District SmbA", "HR Assistant", "www.rld.org", "6900", "", "jaje@rld.org","","","",3,false);
-            BEBusinessCard card3 = new BEBusinessCard("Kevin","Anders", "Højvangshaven 37", "+45 42 95 91 21", "Denmark", "Esbjerg", "Promovo I/S", "CEO", "www.promovo.dk", "6700", "", "kevin.2703@hotmail.com","","","",2,false);
+            BEBusinessCard card2 = new BEBusinessCard("Jakob","Jensen", "Holmevej 41", "+45 75 41 21 36", "Denmark", "Vejen", "Red Light District SmbA", "HR Assistant", "www.rld.org", "6900", "", "jaje@rld.org","","","",2,false);
+            BEBusinessCard card3 = new BEBusinessCard("Kevin","Anders", "Højvangshaven 37", "+45 42 95 91 21", "Denmark", "Esbjerg", "Promovo I/S", "CEO", "www.promovo.dk", "6700", "", "kevin.2703@hotmail.com","","","",3,false);
             insert(card); insert(card2); insert(card3);
         }
     }

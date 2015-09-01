@@ -5,7 +5,7 @@ package com.example.keor.businesscardscanner.DAL;
  */
 public class DAConstants {
     public static String DATABASE_NAME = "sqlite.db";
-    public static int DATABASE_VERSION = 9;
+    public static int DATABASE_VERSION = 11;
 
     public static String TABLE_USER = "tb_user";
     public static String TABLE_CARD= "tb_card";

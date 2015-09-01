@@ -38,13 +38,17 @@ public class DAOUser {
     }
 
     public BEUser getUserById(int id) {
-        Cursor cursor = _db.query(DAConstants.TABLE_CARD, new String[]{"Id", "Username", "Password"}, "Id=?", new String[]{"" + id}, null, null, null);
+        BEUser tmp;
+        Cursor cursor = _db.query(DAConstants.TABLE_USER, new String[]{"Id", "Username", "Password"}, "Id=?", new String[]{"" + id}, null, null, null);
         if (cursor.moveToFirst()) {
-            return new BEUser(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+            tmp = new BEUser(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+        }
+        else {
+            tmp = new BEUser(-1,"","");
         }
         if (cursor != null && !cursor.isClosed()) {
             cursor.close();
         }
-        return null;
+        return tmp;
     }
 }

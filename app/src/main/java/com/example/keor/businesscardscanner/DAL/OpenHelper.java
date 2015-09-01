@@ -14,7 +14,7 @@ public class OpenHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + DAConstants.TABLE_USER + "(Username VARCHAR(100), Password VARCHAR(100))");
+        db.execSQL("CREATE TABLE " + DAConstants.TABLE_USER + "(Id INTEGER PRIMARY KEY, Username VARCHAR(100), Password VARCHAR(100))");
         db.execSQL("CREATE TABLE " + DAConstants.TABLE_CARD + "(Id INTEGER PRIMARY KEY, Firstname VARCHAR(100), Lastname VARCHAR(100), Address VARCHAR(100), PhoneNumber VARCHAR(100), Country VARCHAR(100), City VARCHAR(100), Company VARCHAR(100), Title VARCHAR(100), Homepage VARCHAR(100), Fax VARCHAR(100), Postal VARCHAR(100), Email VARCHAR(100), Other VARCHAR(100), EncodedImage TEXT, CreatedDate TEXT, CreatedUserId INTEGER, IsDeleted INTEGER)");
     }
 

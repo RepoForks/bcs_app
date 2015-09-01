@@ -50,6 +50,8 @@
             android:id="@+id/txtCreatedBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_marginRight="10dp"
             android:text="CREATED BY"
             android:textSize="12dp"
             android:layout_marginTop="25dp"/>

@@ -75,31 +75,33 @@ public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
         });
 
         v.setBackgroundColor(colours[position % colours.length]);
-
+        BEUser user;
+        BEBusinessCard c = cards.get(position);
         try {
-            BEBusinessCard c = cards.get(position);
+            int id = c.getCreatedUserId();
+            user = uc.getUserById(id);
+            TextView createdBy = (TextView) v.findViewById(R.id.txtCreatedBy);
 
-            //BEUser user = uc.getUserById(c.getCreatedUserId());
-
-           // TextView createdBy = (TextView) v.findViewById(R.id.txtCreatedBy);
+            if(createdBy != null && user.getId() != -1) {
+                createdBy.setText("Created by\n"+user.getUsername());
+            }
+            else
+                createdBy.setText("");
+        }
+        catch (Exception e) {
+            Log.d("hejsa","hejsa2",e);
+            //Toast.makeText(getContext(),"Fejl",Toast.LENGTH_SHORT).show();
+        }
+        finally {
             TextView name = (TextView) v.findViewById(R.id.name);
             TextView company = (TextView) v.findViewById(R.id.company);
-
-            /*if(createdBy != null && user != null) {
-                createdBy.setText("Created by "+user.getUsername());
-            }*/
-
             if (name != null) {
                 name.setText(c.getFirstname() + " " + c.getLastname());
             }
             if (c.getCompany() != null) {
                 company.setText(c.getCompany());
             }
-        } catch (Exception e) {
-
         }
-
-
         return v;
     }
 }

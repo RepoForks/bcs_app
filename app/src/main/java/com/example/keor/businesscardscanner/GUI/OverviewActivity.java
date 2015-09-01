@@ -142,10 +142,10 @@ public class OverviewActivity extends AppCompatActivity {
             doSearchAnimation();
             return true;
         }
-        if (id == R.id.action_select_delete) {
+        /*if (id == R.id.action_select_delete) {
             Toast.makeText(this, "select delete ", Toast.LENGTH_SHORT).show();
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
