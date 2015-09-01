@@ -1,15 +1,187 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.keor.businesscardscanner.GUI.CardDetailActivity">
+    android:layout_height="match_parent"
+    android:windowSoftInputMode="stateHidden">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context="com.example.keor.businesscardscanner.GUI.CardDetailActivity">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar"></include>
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar"></include>
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView android:text="Administrate business card details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:layout_gravity="center"/>
 
-</LinearLayout>
+        <TextView android:text="Contact person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textSize="24dp"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
+            <EditText
+                android:id="@+id/txtTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Title"
+                android:gravity="center"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <EditText
+                android:id="@+id/txtFirstName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="First name"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/txtLastName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Last name"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <EditText
+                android:id="@+id/txtPhonenumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Phone number"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/txtFax"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Fax"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <EditText
+                android:id="@+id/txtEmail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Email"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+
+        <TextView android:text="Company information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textSize="24dp"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
+            <EditText
+                android:id="@+id/txtCompany"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:gravity="center"
+                android:hint="Company"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <EditText
+                android:id="@+id/txtAddress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Address"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/txtPostal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Zipcode"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <EditText
+                android:id="@+id/txtCity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="City"
+                android:layout_weight="1"/>
+            <EditText
+                android:id="@+id/txtCountry"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Country"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <EditText
+                android:id="@+id/txtHomepage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="Homepage"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

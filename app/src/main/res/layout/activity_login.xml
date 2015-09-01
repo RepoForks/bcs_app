@@ -14,7 +14,9 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent">
+        android:layout_width="fill_parent"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
     <TextView
         android:layout_below="@id/tool_bar"
         android:layout_width="wrap_content"
@@ -33,7 +35,9 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent">
+        android:layout_width="fill_parent"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
         <TextView
             android:layout_below="@id/tool_bar"
             android:layout_width="wrap_content"

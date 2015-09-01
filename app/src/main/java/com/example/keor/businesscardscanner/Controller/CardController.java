@@ -18,13 +18,17 @@ public class CardController {
 
     private CardController(Context context) {
         daoBusinessCard = new DAOBusinessCard(context);
-        cards = daoBusinessCard.getAllCards();
+        cards = getCards();
     }
 
     public static CardController getInstance(Context context) {
         if (instance == null)
             instance = new CardController(context);
         return instance;
+    }
+
+    public ArrayList<BEBusinessCard> getCards() {
+        return daoBusinessCard.getAllCards();
     }
 
     public ArrayList<BEBusinessCard> getCardsByInput(String input) {
@@ -35,6 +39,14 @@ public class CardController {
             }
         }
         return matchedCards;
+    }
+
+    public void saveCard(BEBusinessCard card) {
+        daoBusinessCard.updateCard(card);
+    }
+
+    public void deleteCard(BEBusinessCard card) {
+        daoBusinessCard.deleteCard(card);
     }
 
 }
