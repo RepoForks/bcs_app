@@ -12,7 +12,7 @@
         android:id="@+id/action_save_card"
         android:orderInCategory="300"
         android:title="Save business card"
-        android:icon="@drawable/ic_save"
+        android:icon="@drawable/ic_save2"
         app:showAsAction="ifRoom"></item>
 
 </menu>

@@ -31,12 +31,15 @@ public class CardDetailActivity extends AppCompatActivity {
     private EditText txtFax;
     private CardController cc;
 
+    private boolean saveState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
         Bundle b = getIntent().getExtras();
-        _card = (BEBusinessCard)  b.getSerializable("CARD");
+        _card = (BEBusinessCard)  b.getSerializable(GUIConstants.CARD);
+        saveState = b.getBoolean(GUIConstants.SAVE_STATE);
         findViews();
         populateData();
         initToolbar();
@@ -108,7 +111,10 @@ public class CardDetailActivity extends AppCompatActivity {
 
         if (id == R.id.action_save_card) {
             updateCurrentCard();
+            if (!saveState)
             cc.saveCard(_card);
+            else
+//            cc.createCard(_card);
             finish();
         }
 
