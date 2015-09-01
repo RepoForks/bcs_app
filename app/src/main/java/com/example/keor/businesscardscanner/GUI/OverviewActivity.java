@@ -135,7 +135,9 @@ public class OverviewActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_take_picture) {
-            Toast.makeText(this, "Take picture intent", Toast.LENGTH_SHORT).show();
+           Intent scanIntent = new Intent();
+            scanIntent.setClass(this, ScanActivity.class);
+            startActivity(scanIntent);
             return true;
         }
         if (id == R.id.action_search) {
