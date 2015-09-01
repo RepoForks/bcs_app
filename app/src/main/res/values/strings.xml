@@ -19,5 +19,6 @@
     <string name="title_activity_card_detail">CardDetailActivity</string>
     <string name="title_activity_scan">ScanActivity</string>
     <string name="title_activity_prepare_scan">PrepareScanActivity</string>
+    <string name="title_activity_save_contact">SaveContactActivity</string>
 
 </resources>

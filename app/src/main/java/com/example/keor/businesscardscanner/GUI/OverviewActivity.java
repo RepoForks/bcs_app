@@ -57,7 +57,7 @@ public class OverviewActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(), CardDetailActivity.class);
-                intent.putExtra("CARD", cards.get(position));
+                intent.putExtra(GUIConstants.CARD, cards.get(position));
                 startActivityForResult(intent, 1);
                 //makeShortToast("Full name: " + cards.get(position).getFullname());
             }

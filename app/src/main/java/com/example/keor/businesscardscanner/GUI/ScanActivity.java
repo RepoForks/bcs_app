@@ -1,15 +1,19 @@
 package com.example.keor.businesscardscanner.GUI;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,43 +22,34 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
 
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.ContentBody;
-
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
 public class ScanActivity extends AppCompatActivity {
 
-    Button btnRecapture;
-    Button btnNothing;
+    private Toolbar toolbar;
+    Button btnNext;
+    Button btnDelete;
     Button btnOCR;
     private SliderLayout mDemoSlider;
+    ProgressDialog progress;
 
     ArrayList<String> pictureLocation;
     ArrayList<Bitmap> pictures;
     private Uri imageUri;
     Bitmap selectedBitmap;
     String selectedBitmapPath;
+    BEBusinessCard createdCard = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +58,15 @@ public class ScanActivity extends AppCompatActivity {
         findViews();
         setListeners();
         initSettings();
+        initToolbar();
         takePicture();
+    }
+
+    private void initToolbar() {
+        toolbar.setTitle("Scan a card");
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setNavigationIcon(R.drawable.ic_camera);
+        setSupportActionBar(toolbar);
     }
 
     private void initSettings() {
@@ -74,49 +77,48 @@ public class ScanActivity extends AppCompatActivity {
         //  loadPictures();
     }
 
+    private void setStates() {
+        btnOCR.setEnabled(pictures.size() != 0);
+        btnDelete.setEnabled(pictures.size() != 0);
+    }
+
     private void loadPictures() {
         mDemoSlider.removeAllSliders();
-        HashMap<String, Bitmap> url_maps = new HashMap<String, Bitmap>();
-        for (int i = 0; i < pictures.size(); i++) {
-            url_maps.put(pictureLocation.get(i), pictures.get(i));
-        }
+            HashMap<String, Bitmap> url_maps = new HashMap<String, Bitmap>();
+            for (int i = 0; i < pictures.size(); i++) {
+                url_maps.put(pictureLocation.get(i), pictures.get(i));
+            }
 
 
-        for (int i = 0; i < url_maps.values().size(); i++) {
-            File file = new File(pictureLocation.get(i));
-            OutputStream os = null;
-            try {
-                os = new BufferedOutputStream(new FileOutputStream(file));
-            } catch (FileNotFoundException e) {
-                Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
-                        .show();
-            }
-            pictures.get(i).compress(Bitmap.CompressFormat.JPEG, 100, os);
-            try {
-                os.close();
-            } catch (IOException e) {
-                Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
-                        .show();
-            }
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
+            for (int i = 0; i < url_maps.values().size(); i++) {
+                File file = new File(pictureLocation.get(i));
+                OutputStream os = null;
+                try {
+                    os = new BufferedOutputStream(new FileOutputStream(file));
+                } catch (FileNotFoundException e) {
+                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                pictures.get(i).compress(Bitmap.CompressFormat.JPEG, 100, os);
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                TextSliderView textSliderView = new TextSliderView(this);
+                // initialize a SliderLayout
+                textSliderView
 //                    .description(name)
-                    .image(file)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                        @Override
-                        public void onSliderClick(BaseSliderView baseSliderView) {
+                        .image(file)
+                        .setScaleType(BaseSliderView.ScaleType.Fit)
+                        .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                            @Override
+                            public void onSliderClick(BaseSliderView baseSliderView) {
 
-                        }
-                    });
-
-//            add your extra information
-//            textSliderView.bundle(new Bundle());
-//            textSliderView.getBundle()
-//                    .putString("extra",name);
-
-            mDemoSlider.addSlider(textSliderView);
+                            }
+                        });
+                mDemoSlider.addSlider(textSliderView);
         }
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mDemoSlider.stopAutoCycle();
@@ -158,10 +160,14 @@ public class ScanActivity extends AppCompatActivity {
                 Bitmap bitmap = loadImage(selectedImage.getPath());
                 pictures.add(bitmap);
                 pictureLocation.add(selectedImage.getPath());
+                if (pictures.size() == 1) {
+                    selectedBitmap = pictures.get(0);
+                    selectedBitmapPath = pictureLocation.get(0);
+                }
+                setStates();
                 loadPictures();
-//                imgView.setImageBitmap(bitmap);
-                Toast.makeText(this, selectedImage.toString(),
-                        Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, selectedImage.toString(),
+//                        Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Toast.makeText(this, "Failed to load: " + e.getMessage(), Toast.LENGTH_SHORT)
                         .show();
@@ -183,199 +189,226 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        btnNothing.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickBtnNothing();
+                onClickBtnDelete();
             }
         });
-        btnRecapture.setOnClickListener(new View.OnClickListener() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickBtnRecapture();
+                onClickBtnNextPicture();
             }
         });
         btnOCR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                onClickBtnOCR();
+                onClickBtnOCR();
 
-                File file = new File(selectedBitmapPath);
-                int file_sizeBytes = Integer.parseInt(String.valueOf(file.length()));
-                String urlServer = "http://bcr1.intsig.net/BCRService/BCR_VCF2?user=" + "keor@bws.dk" + "&pass=" + "PWELTERB6PBRYFJL" + "&lang=15&size=" + file_sizeBytes;
-
-                String[] names2 = selectedBitmapPath.split("/");
-                String name = names2[4].split("\\.")[0];
-
-                Bitmap bitmap = selectedBitmap;
-                String filename = name + ".jpg";
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                ContentBody contentPart = new ByteArrayBody(bos.toByteArray(), filename);
-
-                MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                reqEntity.addPart("picture", contentPart);
-                String response = multipost(urlServer, reqEntity);
-                ConvertResponseToCard(response);
             }
         });
     }
 
-    private void ConvertResponseToCard(String response) {
-
-    }
-
-    private static String multipost(String urlString, MultipartEntity reqEntity) {
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setUseCaches(false);
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.addRequestProperty("Content-length", reqEntity.getContentLength()+"");
-            conn.addRequestProperty(reqEntity.getContentType().getName(), reqEntity.getContentType().getValue());
-
-            OutputStream os = conn.getOutputStream();
-            reqEntity.writeTo(conn.getOutputStream());
-            os.close();
-            conn.connect();
-
-            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                return readStream(conn.getInputStream());
-            }
-
-        } catch (Exception e) {
-//            Log.e(TAG, "multipart post error " + e + "(" + urlString + ")");
-        }
-        return null;
-    }
-
-    private static String readStream(InputStream in) {
-        BufferedReader reader = null;
-        StringBuilder builder = new StringBuilder();
-        try {
-            reader = new BufferedReader(new InputStreamReader(in));
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return builder.toString();
-    }
-
     private void onClickBtnOCR() {
-        File file = new File(selectedBitmapPath);
-        int file_sizeBytes = Integer.parseInt(String.valueOf(file.length()));
-        HttpURLConnection connection = null;
-        DataOutputStream outputStream = null;
-        String pathToOurFile = selectedBitmapPath;
-        String urlServer = "http://bcr1.intsig.net/BCRService/BCR_VCF2?user=" + "keor@bws.dk" + "&pass=" + "PWELTERB6PBRYFJL" + "&lang=15&size=" + file_sizeBytes;
-        String encodedUsernamePassword = getB64Auth("keor@bws.dk", "321keor654");
+        btnOCR.setEnabled(false);
+        OCRCommunicator ocrCommunicator = new OCRCommunicator(this, selectedBitmap, selectedBitmapPath);
+        ocrCommunicator.execute();
 
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary =  "*****";
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Scanning...");
+        progress.setCancelable(false);
+        progress.show();
+// To dismiss the dialog
+//        progress.dismiss();
 
-        String[] names2 = selectedBitmapPath.split("/");
-        String name = names2[4].split("\\.")[0];
+//        ConvertResponseToCard(response);
+    }
 
+    public void ConvertResponseToCard(String response) {
+        BEBusinessCard card = new BEBusinessCard();
 
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1*1024*1024;
+        try {
+            //Firstname
+            if (response.contains("FN;CHARSET=utf-8:")) {
+                String name = response.split("FN;CHARSET=utf-8:")[1];
+                String firstName = name.split(" ")[0];
+                card.setFirstname(firstName);
 
-        try
-        {
-            FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile) );
-
-            URL url = new URL(urlServer);
-            connection = (HttpURLConnection) url.openConnection();
-
-            // Allow Inputs & Outputs.
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setUseCaches(false);
-
-            // Set HTTP method to POST.
-            connection.setRequestProperty("Authorization", "Basic " + encodedUsernamePassword);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Accept", "text/vcard");
-            connection.setRequestProperty("Content-Type", "text/vcard");
-            connection.setRequestProperty("Connection", "Keep-Alive");
-
-            outputStream = new DataOutputStream( connection.getOutputStream() );
-            outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            outputStream.writeBytes("Content-Disposition: form-data; name=\"" + name + "\";filename=\"" + name + ".jpg" +"\"" + lineEnd);
-            outputStream.writeBytes(lineEnd);
-
-            bytesAvailable = fileInputStream.available();
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
-
-            // Read file
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-            while (bytesRead > 0)
-            {
-                outputStream.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                //Lastname
+                String lastName = name.split(" ")[1];
+                lastName = lastName.split("X-IS-INFO")[0];
+                card.setLastname(lastName);
+            }
+            //City
+            if (response.contains("CITY???")) {
+                String city = response.split("TITLE:")[1];
+                city = city.split("X-IS-INFO")[0];
+                card.setCity(city);
             }
 
-            outputStream.writeBytes(lineEnd);
-            outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+            //Postal
+            if (response.contains("POSTAL???")) {
+                String postal = response.split("TITLE:")[1];
+                postal = postal.split("X-IS-INFO")[0];
+                card.setPostal(postal);
+            }
 
+            //Country
+            if (response.contains("COUNTRY???")) {
+                String country = response.split("TITLE:")[1];
+                country = country.split("X-IS-INFO")[0];
+                card.setCountry(country);
+            }
 
-            // Responses from the server (code and message)
-            int serverResponseCode = connection.getResponseCode();
-            String serverResponseMessage = connection.getResponseMessage();
+            //Address
+            if (response.contains("LABEL;WORK;PREF;CHARSET=utf-8:")) {
+                String address = response.split("LABEL;WORK;PREF;CHARSET=utf-8:")[1];
+                address = address.split("X-IS-INFO")[0];
+                card.setAddress(address);
+            }
 
-            fileInputStream.close();
-            outputStream.flush();
-            outputStream.close();
+            //Company
+            if (response.contains("ORG;CHARSET=utf-8:;")) {
+                String company = response.split("ORG;CHARSET=utf-8:;")[1]; // LABEL;WORK;PREF;CHARSET=utf-8: // RG;CHARSET=utf-8:;
+                company = company.split("X-IS-INFO")[0];
+                card.setCompany(company);
+            }
+
+            //Phonenumber
+            if (response.contains("TEL;CELL;VOICE:")) {
+                String phoneNumber = response.split("TEL;CELL;VOICE:")[1];
+                phoneNumber = phoneNumber.split("X-IS-INFO")[0];
+                card.setPhonenumber(phoneNumber);
+            }
+
+            //Title
+            if (response.contains("ORG;CHARSET=utf-8:;")) {
+                String title = response.split("ORG;CHARSET=utf-8:;")[1];
+                title = title.split("X-IS-INFO")[0];
+                card.setTitle(title);
+            }
+
+            //Homepage
+            if (response.contains("URL;WORK;CHARSET=utf-8:")) {
+                String homepage = response.split("URL;WORK;CHARSET=utf-8:")[1];
+                homepage = homepage.split("X-IS-INFO")[0];
+                card.setHomepage(homepage);
+            }
+
+            //Fax
+            if (response.contains("TEL;WORK;FAX:")) {
+                String fax = response.split("TEL;WORK;FAX:")[1];
+                fax = fax.split("X-IS-INFO")[0];
+                card.setFax(fax);
+            }
+
+            //Email
+            if (response.contains("EMAIL;PREF;INTERNET:")) {
+                String email = response.split("EMAIL;PREF;INTERNET:")[1];
+                email = email.split("X-IS-INFO")[0];
+                card.setEmail(email);
+            }
+
+            //Other /note
+            if (response.contains("NOTE;CHARSET=utf-8:")) {
+                String other = response.split("NOTE;CHARSET=utf-8:")[1];
+                other = other.split("X-IS-INFO")[0];
+                card.setOther(other);
+            }
+
+            //EncodedImage
+            if (response.contains("URL;WORK;CHARSET=utf-8:")) {
+
+            }
+
+            //isDeleted = false
+            if (response.contains("URL;WORK;CHARSET=utf-8:")) {
+
+            }
+
+            //createdUserId = ??
+            if (response.contains("URL;WORK;CHARSET=utf-8:")) {
+
+            }
+            createdCard = card;
+            btnOCR.setEnabled(true);
+            progress.dismiss();
+            Toast.makeText(this, "Finished scanning", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, "fejl: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        catch (Exception ex)
-        {
-            Toast.makeText(this, "Failed to load, exception: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+
     }
 
-    private String getB64Auth (String login, String pass) {
-        String source=login+":"+pass;
-        String ret="Basic "+Base64.encodeToString(source.getBytes(),Base64.URL_SAFE|Base64.NO_WRAP);
-        return ret;
+
+
+
+
+
+    private void onClickBtnDelete() {
+        pictures.remove(mDemoSlider.getCurrentPosition());
+        pictureLocation.remove(mDemoSlider.getCurrentPosition());
+        mDemoSlider.removeSliderAt(mDemoSlider.getCurrentPosition());
+        if (pictures.size() == 0) {
+//            mDemoSlider.removeAllViews();
+//            mDemoSlider = (SliderLayout) findViewById(R.id.slider);
+        }
+        loadPictures();
+        setStates();
     }
 
-    private void onClickBtnRecapture() {
+    private void onClickBtnNextPicture() {
         takePicture();
     }
 
-    private void onClickBtnNothing() {
-
+    private void findViews() {
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+        btnOCR = (Button) findViewById(R.id.btnOCR);
+        btnNext = (Button) findViewById(R.id.btnNextPicture);
+        mDemoSlider = (SliderLayout) findViewById(R.id.slider);
     }
 
-    private void findViews() {
-        btnNothing = (Button) findViewById(R.id.btnNothing);
-        btnOCR = (Button) findViewById(R.id.btnOCR);
-        btnRecapture = (Button) findViewById(R.id.btnRecapture);
-        mDemoSlider = (SliderLayout) findViewById(R.id.slider);
-//        imgView = (ImageView) findViewById(R.id.imgView);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_scan, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_continue) {
+            if (pictures.size() != 0) {
+                if (createdCard == null){
+                    Toast.makeText(this, "Please use OCR on a picture", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                Intent saveIntent = new Intent();
+                    Bundle b = new Bundle();
+                    b.putSerializable(GUIConstants.CARD, createdCard);
+                    saveIntent.putExtras(b);
+                    GUIConstants.SAVE_STATE_VALUE = true;
+                    saveIntent.putExtra(GUIConstants.SAVE_STATE, GUIConstants.SAVE_STATE_VALUE);
+                saveIntent.setClass(this, CardDetailActivity.class);
+                startActivity(saveIntent);
+                }
+            } else {
+                Toast.makeText(this, "Please take atleast 1 picture", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -15,17 +15,17 @@
       android:layout_height="match_parent" />
 
     <Button
-        android:id="@+id/btnNothing"
-        android:layout_marginTop="50dp"
+        android:id="@+id/btnDelete"
+        android:layout_marginTop="40dp"
         android:layout_width="fill_parent"
-        android:text="Do nothing, but save picture"
+        android:text="Delete this picture"
         android:layout_height="match_parent" />
 
     <Button
-        android:id="@+id/btnRecapture"
-        android:layout_marginTop="50dp"
+        android:id="@+id/btnNextPicture"
+        android:layout_marginTop="40dp"
         android:layout_width="fill_parent"
-        android:text="Recapture picture"
+        android:text="Next picture"
         android:layout_height="match_parent" />
 
     <com.daimajia.slider.library.SliderLayout
