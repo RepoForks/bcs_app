@@ -13,6 +13,8 @@ import com.example.keor.businesscardscanner.Controller.CardController;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
 
+import java.io.IOException;
+
 public class CardDetailActivity extends AppCompatActivity {
 
     private Toolbar toolbar;

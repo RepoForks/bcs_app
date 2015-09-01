@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,7 @@ public class CardController {
     DAOBusinessCard daoBusinessCard;
     ArrayList<BEBusinessCard> cards;
 
-    private CardController(Context context) {
+    private CardController(Context context){
         daoBusinessCard = new DAOBusinessCard(context);
         cards = getCards();
     }

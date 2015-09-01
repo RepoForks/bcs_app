@@ -25,6 +25,7 @@ import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class OverviewActivity extends AppCompatActivity {
@@ -135,7 +136,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_take_picture) {
-           Intent scanIntent = new Intent();
+            Intent scanIntent = new Intent();
             scanIntent.setClass(this, ScanActivity.class);
             startActivity(scanIntent);
             return true;
