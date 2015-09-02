@@ -2,186 +2,370 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:windowSoftInputMode="stateHidden">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:orientation="vertical"
         tools:context="com.example.keor.businesscardscanner.GUI.CardDetailActivity">
 
         <include
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar"></include>
 
-        <TextView android:text="Administrate business card details"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:text="Administrate business card details"
+            android:textSize="14dp" />
 
-        <TextView android:text="Contact person"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="15dp"
-            android:textSize="24dp"
-            android:layout_gravity="center"/>
+            android:text="Contact person"
+            android:textSize="24dp" />
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp">
-            <EditText
-                android:id="@+id/txtTitle"
+            android:paddingTop="10dp">
+            <!--android:layout_marginLeft="25dp"-->
+            <!--android:layout_marginRight="25dp"-->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Title"
-                android:gravity="center"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Title"
+                    android:textSize="10dp" />
+
+            <EditText
+                android:id="@+id/txtTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Software developer"
+                android:singleLine="true" />
+                </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <EditText
-                android:id="@+id/txtFirstName"
-                android:layout_width="fill_parent"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="First name"
-                android:layout_weight="1"/>
-            <EditText
-                android:id="@+id/txtLastName"
-                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="First name"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtFirstName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Jens"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Last name"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Last name"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtLastName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Jensen"
+                    android:singleLine="true" />
+            </LinearLayout>
         </LinearLayout>
 
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <EditText
-                android:id="@+id/txtPhonenumber"
-                android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Phone number"
-                android:layout_weight="1"/>
-            <EditText
-                android:id="@+id/txtFax"
-                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Phone number"
+                    android:textSize="10dp" />
+
+
+                <EditText
+                    android:id="@+id/txtPhonenumber"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="+45 12 34 56 78"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Fax"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Fax"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtFax"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="+4572124945"
+                    android:singleLine="true" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <EditText
-                android:id="@+id/txtEmail"
-                android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Email"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Email"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtEmail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="test@test.dk"
+                    android:singleLine="true" />
+            </LinearLayout>
         </LinearLayout>
 
 
-        <TextView android:text="Company information"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="15dp"
-            android:textSize="24dp"
-            android:layout_gravity="center"/>
+            android:text="Company information"
+            android:textSize="24dp" />
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp">
+            android:paddingTop="10dp" >
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Company name:"
+                    android:textSize="10dp" />
+
             <EditText
                 android:id="@+id/txtCompany"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:gravity="center"
-                android:hint="Company"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:hint="Blue Water Shipping"
+                android:singleLine="true" />
+                </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <EditText
-                android:id="@+id/txtAddress"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Address"
-                android:layout_weight="1"/>
-            <EditText
-                android:id="@+id/txtPostal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Zipcode"
-                android:layout_weight="1"/>
-        </LinearLayout>
+            android:weightSum="2">
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <EditText
-                android:id="@+id/txtCity"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="City"
-                android:layout_weight="1"/>
-            <EditText
-                android:id="@+id/txtCountry"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Country"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <EditText
-                android:id="@+id/txtHomepage"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:hint="Homepage"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Address"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtAddress"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="809 C Street Corona"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Zipcode"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtPostal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="NY 11369"
+                    android:singleLine="true" />
+            </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="City"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtCity"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="New York City"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Country"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtCountry"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="England"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Homepage"
+                    android:textSize="10dp" />
+
+                <EditText
+                    android:id="@+id/txtHomepage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="www.somepage.com"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
