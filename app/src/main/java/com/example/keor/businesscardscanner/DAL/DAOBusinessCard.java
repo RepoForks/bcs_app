@@ -16,6 +16,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -25,6 +29,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -146,82 +151,33 @@ public class DAOBusinessCard {
         return _sql.executeUpdateDelete();
     }
 
-    public static String GET(String url){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        StringBuilder result = new StringBuilder();
-        while((line = bufferedReader.readLine()) != null)
-            result.append(line);
-
-        inputStream.close();
-        return result.toString();
-    }
-
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            return GET(urls[0]);
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            String s = result;
-
-            convertResultToCards(result);
-
-        }
-    }
-
-    private void convertResultToCards(String result) {
-
-    }
-
-
-
     public ArrayList<BEBusinessCard> getAllCards() {
-        new HttpAsyncTask().execute("http://localhost:24334/api/Card");
-
-
-        return null;
-        /*
         ArrayList<BEBusinessCard> cards = new ArrayList<>();
-        Cursor cursor = _db.query(DAConstants.TABLE_CARD, new String[]{"Id", "Firstname", "Lastname", "Address", "PhoneNumber", "Country", "City", "Company", "Title", "Homepage", "Fax", "Postal", "Email", "Other", "EncodedImage", "CreatedDate", "CreatedUserId", "IsDeleted"}, "IsDeleted=?", new String[]{"" + 0}, null, null, "Firstname desc");
-        if (cursor.moveToFirst()) {
-            do {
-                cards.add(new BEBusinessCard(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),  cursor.getString(4), cursor.getString(5), cursor.getString(6),  cursor.getString(7),  cursor.getString(8),  cursor.getString(9),  cursor.getString(10), cursor.getString(11), cursor.getString(12), cursor.getString(13), cursor.getString(14), cursor.getString(15), cursor.getInt(16), (cursor.getInt(17)>0)));
-            } while (cursor.moveToNext());
+        String URL = "http://localhost:24334/api/Card";
+        JSONArray obj;
+        GetJSONFromAPI api = new GetJSONFromAPI();
+        api.execute(URL);
+
+        try {
+            obj = api.get();
+            cards = ConvertFromJsonToBE(obj);
+        } catch (Exception e) {
+            Log.e("Api get", "Error when trying to connect to api", e);
         }
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
+        return cards;
+    }
+
+    private ArrayList<BEBusinessCard> ConvertFromJsonToBE(JSONArray array) throws JSONException {
+        JSONObject obj = new JSONObject();
+        JSONArray obj1 = new JSONArray();
+
+        ArrayList<BECanvas> mList = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            obj = array.getJSONObject(i);
+            obj1 = obj.getJSONArray("entrydata");
+            mList.add(setBECanvas(obj1));
         }
-        return cards;*/
+        return mList;
     }
 
 
