@@ -1,49 +1,31 @@
 package com.example.keor.businesscardscanner.DAL;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
+import android.os.StrictMode;
 
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by keor on 27-08-2015.
@@ -65,7 +47,9 @@ public class DAOBusinessCard {
         OpenHelper openHelper = new OpenHelper(_context);
         _db = openHelper.getWritableDatabase();
         sdf = new SimpleDateFormat("dd MMM HH:mm");
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
+        StrictMode.setThreadPolicy(policy);
 
 //        if (getAllCards().size() == 0){
 //            BEBusinessCard card = new BEBusinessCard("André","Thy", "Mølleparkvej 2 2.6", "+4522410745", "Denmark", "Esbjerg", "Blue Water Shipping", "Software developer", "www.bws.dk", "6715", "", "2809thy@gmail.com","","","",1,false);
@@ -117,10 +101,10 @@ public class DAOBusinessCard {
         _sql.bindString(12, card.getEmail());
         _sql.bindString(13, card.getOther());
         _sql.bindString(14, card.getEncodedImage());
-        _sql.bindString(15, ""+sdf.format(new Date()).toString());
-        _sql.bindString(16, ""+card.getCreatedUserId());
+        _sql.bindString(15, "" + sdf.format(new Date()).toString());
+        _sql.bindString(16, "" + card.getCreatedUserId());
         int tmp = card.getIsDeleted() ? 1 : 0;
-        _sql.bindString(17, ""+tmp);
+        _sql.bindString(17, "" + tmp);
         return _sql.executeInsert();
     }
 
@@ -140,45 +124,92 @@ public class DAOBusinessCard {
         _sql.bindString(12, card.getEmail());
         _sql.bindString(13, card.getOther());
         _sql.bindString(14, card.getEncodedImage());
-        _sql.bindString(15, ""+card.getId());
+        _sql.bindString(15, "" + card.getId());
         return _sql.executeUpdateDelete();
     }
 
     public long deleteCard(BEBusinessCard card) {
         _sql = _db.compileStatement(_DELETE);
-        _sql.bindString(1, ""+1);
-        _sql.bindString(2, ""+card.getId());
+        _sql.bindString(1, "" + 1);
+        _sql.bindString(2, "" + card.getId());
         return _sql.executeUpdateDelete();
     }
 
     public ArrayList<BEBusinessCard> getAllCards() {
-        ArrayList<BEBusinessCard> cards = new ArrayList<>();
-        String URL = "http://localhost:24334/api/Card";
-        JSONArray obj;
-        GetJSONFromAPI api = new GetJSONFromAPI();
-        api.execute(URL);
-
+        String url = "http://localhost:24334/api/Card";
+        String[] allTexts;
+        cards = new ArrayList<>();
         try {
-            obj = api.get();
-            cards = ConvertFromJsonToBE(obj);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new URL(url).openStream());
+
+            NodeList nodeList = doc.getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+
+                NodeList items = doc.getElementsByTagName("Card");
+                for (int y = 0; y < items.getLength(); y++) {
+                    BEBusinessCard card = new BEBusinessCard();
+                    card.setAddress(getTextContent(items, y, 0));
+                    card.setCity(getTextContent(items, y, 1));
+                    card.setCompany(getTextContent(items, y, 2));
+                    card.setCountry(getTextContent(items, y, 3));
+                    card.setCreatedDate(getTextContent(items, y, 4));
+                    card.setCreatedUserId(Integer.parseInt(getTextContent(items, y, 5)));
+                    card.setEmail(getTextContent(items, y, 6));
+                    card.setEncodedImage(getTextContent(items, y, 7));
+                    card.setFax(getTextContent(items, y, 8));
+                    card.setFirstname(getTextContent(items, y, 9));
+                    card.setHomepage(getTextContent(items, y, 10));
+                    card.setId(Integer.parseInt(getTextContent(items, y, 11)));
+                    card.setIsDeleted(Boolean.parseBoolean(getTextContent(items, y, 12)));
+                    card.setLastname(getTextContent(items, y, 13));
+                    card.setOther(getTextContent(items, y, 14));
+                    card.setPhonenumber(getTextContent(items, y, 15));
+                    card.setPostal(getTextContent(items, y, 16));
+                    card.setTitle(getTextContent(items, y, 17));
+                    cards.add(card);
+
+                }
+            }
         } catch (Exception e) {
-            Log.e("Api get", "Error when trying to connect to api", e);
+            e.printStackTrace();
         }
+
+
+//        try {
+
+        //Element rootNode = doc.getRootElement();
+
+        // List list = rootNode.getChildren("staff");
+
+//            for (int i = 0; i < list.size(); i++) {
+//
+//                Element node = (Element) list.get(i);
+//
+//                System.out.println("First Name : " + node.getChildText("firstname"));
+//                System.out.println("Last Name : " + node.getChildText("lastname"));
+//                System.out.println("Nick Name : " + node.getChildText("nickname"));
+//                System.out.println("Salary : " + node.getChildText("salary"));
+//
+//            }
+
+//        } catch (IOException io) {
+//            System.out.println(io.getMessage());
+//        } catch (JDOMException jdomex) {
+//            System.out.println(jdomex.getMessage());
+//        }
+
+
         return cards;
     }
 
-    private ArrayList<BEBusinessCard> ConvertFromJsonToBE(JSONArray array) throws JSONException {
-        JSONObject obj = new JSONObject();
-        JSONArray obj1 = new JSONArray();
-
-        ArrayList<BECanvas> mList = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            obj = array.getJSONObject(i);
-            obj1 = obj.getJSONArray("entrydata");
-            mList.add(setBECanvas(obj1));
-        }
-        return mList;
+    private String getTextContent(NodeList items, int y, int itemNumber) {
+        if (items == null || items.item(y) == null || items.item(y).getChildNodes() == null || items.item(y).getChildNodes().item(itemNumber) == null || items.item(y).getChildNodes().item(itemNumber).getChildNodes() == null || items.item(y).getChildNodes().item(itemNumber).getChildNodes().item(0) == null)
+            return "";
+        return items.item(y).getChildNodes().item(itemNumber).getChildNodes().item(0).getTextContent();
     }
+
 
 
     /*public ArrayList<BEBusinessCard> getAllCards() {

@@ -74,7 +74,6 @@ public class GetJSONFromAPI extends AsyncTask<String, Void, JSONArray> {
 
         try {
             jsnobject = new JSONObject(result);
-            jsonArray = (JSONArray) jsnobject.get("viewentry");
         } catch (JSONException e) {
             Log.e("JSON", "Error creating JSON", e);
         }
