@@ -111,6 +111,7 @@ public class CardDetailActivity extends AppCompatActivity {
         if (id == R.id.action_save_card) {
             updateCurrentCard();
             cc.saveCard(_card);
+            cc.postCard(_card);
             finish();
         }
 

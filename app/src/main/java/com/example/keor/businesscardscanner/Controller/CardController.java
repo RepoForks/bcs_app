@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
+import com.example.keor.businesscardscanner.GUI.APICommunicator;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 
 import java.io.IOException;
@@ -56,4 +57,8 @@ public class CardController {
         daoBusinessCard.deleteCard(card);
     }
 
+    public void postCard(BEBusinessCard card) {
+        APICommunicator api = new APICommunicator(card);
+        api.execute();
+    }
 }
