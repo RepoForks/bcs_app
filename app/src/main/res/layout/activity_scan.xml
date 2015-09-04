@@ -14,6 +14,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/fancy_green_button"
         android:textColor="#ffffff"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:text="Recognize text on picture"/>
 
     <com.daimajia.slider.library.SliderLayout
