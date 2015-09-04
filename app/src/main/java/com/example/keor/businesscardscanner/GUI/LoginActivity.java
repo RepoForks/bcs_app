@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     private void initToolbar() {
         toolbar.setTitle("Login");
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.drawable.ic_login);
+        //toolbar.setNavigationIcon(R.drawable.ic_login);
         setSupportActionBar(toolbar);
     }
 

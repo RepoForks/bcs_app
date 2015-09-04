@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -30,6 +32,7 @@ public class CardDetailActivity extends AppCompatActivity {
     private EditText txtPostal;
     private EditText txtFax;
     private CardController cc;
+    private Button btnSave;
 
     private boolean saveState;
 
@@ -43,11 +46,29 @@ public class CardDetailActivity extends AppCompatActivity {
         findViews();
         populateData();
         initToolbar();
+        initListeners();
         initSettings();
         cc = CardController.getInstance(this);
     }
 
+    private void initListeners() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateCurrentCard();
+                if (!saveState) {
+                    cc.saveCard(_card);
+                    finish();
+                }
+                else
+                    //cc.createCard(_card);
+                    finish();
+            }
+        });
+    }
+
     private void initSettings() {
+
     }
 
     private void populateData() {
@@ -79,12 +100,13 @@ public class CardDetailActivity extends AppCompatActivity {
         txtPostal = (EditText) findViewById(R.id.txtPostal);
         txtFax = (EditText) findViewById(R.id.txtFax);
         txtEmail = (EditText) findViewById(R.id.txtEmail);
+        btnSave = (Button) findViewById(R.id.btnSaveContact);
     }
 
     private void initToolbar() {
         toolbar.setTitle("Business Card details");
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.drawable.ic_details);
+        //toolbar.setNavigationIcon(R.drawable.ic_details);
         setSupportActionBar(toolbar);
     }
 
@@ -102,22 +124,16 @@ public class CardDetailActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        */
-
         if (id == R.id.action_save_card) {
             updateCurrentCard();
-            if (!saveState)
-            cc.saveCard(_card);
+            if (!saveState) {
+                cc.saveCard(_card);
+                finish();
+            }
             else
 //            cc.createCard(_card);
-            finish();
+                finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 

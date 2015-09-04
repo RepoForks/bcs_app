@@ -65,7 +65,7 @@ public class ScanActivity extends AppCompatActivity {
     private void initToolbar() {
         toolbar.setTitle("Scan a card");
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.drawable.ic_camera);
+        //toolbar.setNavigationIcon(R.drawable.ic_camera);
         setSupportActionBar(toolbar);
     }
 
@@ -84,41 +84,41 @@ public class ScanActivity extends AppCompatActivity {
 
     private void loadPictures() {
         mDemoSlider.removeAllSliders();
-            HashMap<String, Bitmap> url_maps = new HashMap<String, Bitmap>();
-            for (int i = 0; i < pictures.size(); i++) {
-                url_maps.put(pictureLocation.get(i), pictures.get(i));
+        HashMap<String, Bitmap> url_maps = new HashMap<String, Bitmap>();
+        for (int i = 0; i < pictures.size(); i++) {
+            url_maps.put(pictureLocation.get(i), pictures.get(i));
+        }
+
+
+        for (int i = 0; i < url_maps.values().size(); i++) {
+            File file = new File(pictureLocation.get(i));
+            OutputStream os = null;
+            try {
+                os = new BufferedOutputStream(new FileOutputStream(file));
+            } catch (FileNotFoundException e) {
+                Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+                        .show();
             }
-
-
-            for (int i = 0; i < url_maps.values().size(); i++) {
-                File file = new File(pictureLocation.get(i));
-                OutputStream os = null;
-                try {
-                    os = new BufferedOutputStream(new FileOutputStream(file));
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
-                            .show();
-                }
-                pictures.get(i).compress(Bitmap.CompressFormat.JPEG, 100, os);
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
-                            .show();
-                }
-                TextSliderView textSliderView = new TextSliderView(this);
-                // initialize a SliderLayout
-                textSliderView
+            pictures.get(i).compress(Bitmap.CompressFormat.JPEG, 100, os);
+            try {
+                os.close();
+            } catch (IOException e) {
+                Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+                        .show();
+            }
+            TextSliderView textSliderView = new TextSliderView(this);
+            // initialize a SliderLayout
+            textSliderView
 //                    .description(name)
-                        .image(file)
-                        .setScaleType(BaseSliderView.ScaleType.Fit)
-                        .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
-                            @Override
-                            public void onSliderClick(BaseSliderView baseSliderView) {
+                    .image(file)
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                        @Override
+                        public void onSliderClick(BaseSliderView baseSliderView) {
 
-                            }
-                        });
-                mDemoSlider.addSlider(textSliderView);
+                        }
+                    });
+            mDemoSlider.addSlider(textSliderView);
         }
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mDemoSlider.stopAutoCycle();
@@ -339,14 +339,7 @@ public class ScanActivity extends AppCompatActivity {
         } catch (Exception ex) {
             Toast.makeText(this, "fejl: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
-
-
-
-
 
     private void onClickBtnDelete() {
         pictures.remove(mDemoSlider.getCurrentPosition());
@@ -393,14 +386,14 @@ public class ScanActivity extends AppCompatActivity {
                     Toast.makeText(this, "Please use OCR on a picture", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                Intent saveIntent = new Intent();
+                    Intent saveIntent = new Intent();
                     Bundle b = new Bundle();
                     b.putSerializable(GUIConstants.CARD, createdCard);
                     saveIntent.putExtras(b);
                     GUIConstants.SAVE_STATE_VALUE = true;
                     saveIntent.putExtra(GUIConstants.SAVE_STATE, GUIConstants.SAVE_STATE_VALUE);
-                saveIntent.setClass(this, CardDetailActivity.class);
-                startActivity(saveIntent);
+                    saveIntent.setClass(this, CardDetailActivity.class);
+                    startActivity(saveIntent);
                 }
             } else {
                 Toast.makeText(this, "Please take atleast 1 picture", Toast.LENGTH_SHORT).show();

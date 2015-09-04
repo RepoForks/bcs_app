@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -94,8 +95,11 @@ public class OverviewActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        cards = cc.getCards();
-        populateList(cards);
+        clearSearchField();
+    }
+
+    private void clearSearchField() {
+        txtSearch.setText("");
     }
 
     private void populateList(ArrayList<BEBusinessCard> c) {
@@ -115,7 +119,7 @@ public class OverviewActivity extends AppCompatActivity {
     private void initToolbar() {
         toolbar.setTitle("Overview");
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.drawable.ic_overview);
+        //toolbar.setNavigationIcon(R.drawable.ic_overview);
         setSupportActionBar(toolbar);
     }
 
@@ -135,7 +139,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_take_picture) {
-           Intent scanIntent = new Intent();
+            Intent scanIntent = new Intent();
             scanIntent.setClass(this, ScanActivity.class);
             startActivity(scanIntent);
             return true;
@@ -155,10 +159,13 @@ public class OverviewActivity extends AppCompatActivity {
         if (txtSearch.getVisibility() == View.GONE) {
             txtSearch.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left));
             txtSearch.setVisibility(View.VISIBLE);
+            txtSearch.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(txtSearch, InputMethodManager.SHOW_IMPLICIT);
         }
         else {
             txtSearch.startAnimation(AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right));
-            txtSearch.setText("");
+            clearSearchField();
             txtSearch.setVisibility(View.GONE);
         }
     }

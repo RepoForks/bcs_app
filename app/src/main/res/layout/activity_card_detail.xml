@@ -56,7 +56,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Software developer"
+                android:hint=""
                 android:singleLine="true" />
                 </LinearLayout>
         </LinearLayout>
@@ -87,7 +87,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Jens"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
 
@@ -109,7 +109,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Jensen"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
@@ -140,7 +140,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="+45 12 34 56 78"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
 
@@ -162,7 +162,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="+4572124945"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
@@ -191,7 +191,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="test@test.dk"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
@@ -231,7 +231,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Blue Water Shipping"
+                android:hint=""
                 android:singleLine="true" />
                 </LinearLayout>
         </LinearLayout>
@@ -261,7 +261,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="809 C Street Corona"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
 
@@ -283,7 +283,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="NY 11369"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
@@ -312,7 +312,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="New York City"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
 
@@ -334,7 +334,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="England"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
@@ -363,9 +363,24 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="www.somepage.com"
+                    android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
+        <Button
+            android:id="@+id/btnSaveContact"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Save contact"
+            android:textColor="@color/background_material_light"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/fancy_blue_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"/>
+
     </LinearLayout>
+
 </ScrollView>
