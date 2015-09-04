@@ -9,13 +9,16 @@
         layout="@layout/tool_bar"></include>
 
     <Button
-      android:id="@+id/btnOCR"
-      android:layout_width="fill_parent"
-      android:text="Recognize text on picture"
-      android:layout_height="match_parent" />
+        android:id="@+id/btnOCR"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fancy_green_button"
+        android:textColor="#ffffff"
+        android:text="Recognize text on picture"/>
 
     <com.daimajia.slider.library.SliderLayout
         android:id="@+id/slider"
+        android:layout_marginTop="10dp"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         />
@@ -23,7 +26,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="20dp">
         <Button
             android:id="@+id/btnDelete"
             android:layout_weight="1"

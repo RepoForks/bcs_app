@@ -69,12 +69,41 @@ public class ScanActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    private void setListeners() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickBtnDelete();
+            }
+        });
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickBtnNextPicture();
+            }
+        });
+        btnOCR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickBtnOCR();
+            }
+        });
+    }
+
     private void initSettings() {
         pictures = new ArrayList<>();
         pictureLocation = new ArrayList<>();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //  loadPictures();
+    }
+
+    private void findViews() {
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+        btnOCR = (Button) findViewById(R.id.btnOCR);
+        btnNext = (Button) findViewById(R.id.btnNextPicture);
+        mDemoSlider = (SliderLayout) findViewById(R.id.slider);
     }
 
     private void setStates() {
@@ -109,9 +138,9 @@ public class ScanActivity extends AppCompatActivity {
             TextSliderView textSliderView = new TextSliderView(this);
             // initialize a SliderLayout
             textSliderView
-//                    .description(name)
+                    //.description(name)
                     .image(file)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setScaleType(BaseSliderView.ScaleType.FitCenterCrop)
                     .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
                         @Override
                         public void onSliderClick(BaseSliderView baseSliderView) {
@@ -155,7 +184,6 @@ public class ScanActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == GUIConstants.CAMERA_CAPTURE_CODE) {
             Uri selectedImage = imageUri;
             getContentResolver().notifyChange(selectedImage, null);
-
             try {
                 Bitmap bitmap = loadImage(selectedImage.getPath());
                 pictures.add(bitmap);
@@ -186,28 +214,6 @@ public class ScanActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private void setListeners() {
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickBtnDelete();
-            }
-        });
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickBtnNextPicture();
-            }
-        });
-        btnOCR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickBtnOCR();
-
-            }
-        });
     }
 
     private void onClickBtnOCR() {
@@ -335,7 +341,8 @@ public class ScanActivity extends AppCompatActivity {
             createdCard = card;
             btnOCR.setEnabled(true);
             progress.dismiss();
-            Toast.makeText(this, "Finished scanning", Toast.LENGTH_SHORT).show();
+            continueToOverview();
+            //Toast.makeText(this, "Finished scanning", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             Toast.makeText(this, "fejl: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -357,14 +364,6 @@ public class ScanActivity extends AppCompatActivity {
         takePicture();
     }
 
-    private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        btnDelete = (Button) findViewById(R.id.btnDelete);
-        btnOCR = (Button) findViewById(R.id.btnOCR);
-        btnNext = (Button) findViewById(R.id.btnNextPicture);
-        mDemoSlider = (SliderLayout) findViewById(R.id.slider);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -381,27 +380,31 @@ public class ScanActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_continue) {
-            if (pictures.size() != 0) {
-                if (createdCard == null){
-                    Toast.makeText(this, "Please use OCR on a picture", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Intent saveIntent = new Intent();
-                    Bundle b = new Bundle();
-                    b.putSerializable(GUIConstants.CARD, createdCard);
-                    saveIntent.putExtras(b);
-                    GUIConstants.SAVE_STATE_VALUE = true;
-                    saveIntent.putExtra(GUIConstants.SAVE_STATE, GUIConstants.SAVE_STATE_VALUE);
-                    saveIntent.setClass(this, CardDetailActivity.class);
-                    startActivity(saveIntent);
-                }
-            } else {
-                Toast.makeText(this, "Please take atleast 1 picture", Toast.LENGTH_SHORT).show();
-            }
+            continueToOverview();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void continueToOverview() {
+        if (pictures.size() != 0) {
+            if (createdCard == null){
+                Toast.makeText(this, "Please use OCR on a picture", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Intent saveIntent = new Intent();
+                Bundle b = new Bundle();
+                b.putSerializable(GUIConstants.CARD, createdCard);
+                saveIntent.putExtras(b);
+                GUIConstants.SAVE_STATE_VALUE = true;
+                saveIntent.putExtra(GUIConstants.SAVE_STATE, GUIConstants.SAVE_STATE_VALUE);
+                saveIntent.setClass(this, CardDetailActivity.class);
+                startActivity(saveIntent);
+            }
+        } else {
+            Toast.makeText(this, "Please take atleast 1 picture", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
