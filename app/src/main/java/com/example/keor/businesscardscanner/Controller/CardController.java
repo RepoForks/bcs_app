@@ -1,10 +1,13 @@
 package com.example.keor.businesscardscanner.Controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
+import com.example.keor.businesscardscanner.GUI.APICommunicator;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +21,6 @@ public class CardController {
 
     private CardController(Context context) {
         daoBusinessCard = new DAOBusinessCard(context);
-        cards = getCards();
     }
 
     public static CardController getInstance(Context context) {
@@ -28,7 +30,13 @@ public class CardController {
     }
 
     public ArrayList<BEBusinessCard> getCards() {
-        return daoBusinessCard.getAllCards();
+        try {
+            cards = daoBusinessCard.getAllCards();
+            return cards;
+        } catch (Exception e) {
+            Log.d("Error", "test: " + e.getMessage());
+        }
+        return null;
     }
 
     public ArrayList<BEBusinessCard> getCardsByInput(String input) {
@@ -49,4 +57,8 @@ public class CardController {
         daoBusinessCard.deleteCard(card);
     }
 
+    public void postCard(BEBusinessCard card) {
+        APICommunicator api = new APICommunicator(card);
+        api.execute();
+    }
 }

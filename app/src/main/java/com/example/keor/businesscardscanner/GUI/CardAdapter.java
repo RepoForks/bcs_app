@@ -21,6 +21,7 @@ import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.Model.BEUser;
 import com.example.keor.businesscardscanner.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -89,8 +90,6 @@ public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
                 createdBy.setText("");
         }
         catch (Exception e) {
-            Log.d("hejsa","hejsa2",e);
-            //Toast.makeText(getContext(),"Fejl",Toast.LENGTH_SHORT).show();
         }
         finally {
             TextView name = (TextView) v.findViewById(R.id.name);

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by keor on 27-08-2015.
  */
-public class BEBusinessCard implements Serializable{
+public class BEBusinessCard implements Serializable {
 
     private int m_id;
     private String m_firstname;
@@ -25,10 +25,12 @@ public class BEBusinessCard implements Serializable{
     private String m_createdDate;
     private int m_createdUserId;
     private boolean m_isDeleted;
+    private String viewentry;
 
-    public BEBusinessCard(){
+    public BEBusinessCard() {
 
     }
+
     public BEBusinessCard(int id, String firstname, String lastname, String address, String phonenumber, String country, String city, String company,
                           String title, String homepage, String postal, String fax, String email, String other, String encodedImage, String createdDate,
                           int createdUserId, boolean isDeleted) {
@@ -76,6 +78,9 @@ public class BEBusinessCard implements Serializable{
 
     public int getId() {
         return m_id;
+    }
+    public void setId(int id) {
+        m_id = id;
     }
 
     public String getFirstname() {
@@ -213,8 +218,12 @@ public class BEBusinessCard implements Serializable{
     public void setIsDeleted(boolean m_isDeleted) {
         this.m_isDeleted = m_isDeleted;
     }
-    public String getFullname(){
+
+    public String getFullname() {
         return getFirstname() + " " + getLastname();
     }
 
+    public String getViewentry() {
+        return viewentry;
+    }
 }

@@ -26,6 +26,7 @@ import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class OverviewActivity extends AppCompatActivity {
