@@ -136,7 +136,7 @@ public class DAOBusinessCard {
     }
 
     public ArrayList<BEBusinessCard> getAllCards() {
-        String url = "http://localhost:24334/api/Card";
+        String url = "http://pto-udv.bws.dk:24334/api/Card";
         String[] allTexts;
         cards = new ArrayList<>();
         try {

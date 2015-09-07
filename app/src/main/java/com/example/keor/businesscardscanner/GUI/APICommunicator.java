@@ -15,6 +15,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -22,6 +23,8 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedReader;
@@ -34,6 +37,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,85 +47,29 @@ import java.util.List;
 public class APICommunicator extends AsyncTask<Void, Void, String> {
     BEBusinessCard _card;
 
-    public APICommunicator(BEBusinessCard card){
+    public APICommunicator(BEBusinessCard card) {
         _card = card;
     }
+
     @Override
     protected String doInBackground(Void... params) {
-        String PostUrl = "http://localhost:24334/api/Card";
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(PostUrl);
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        
-//put here in nameValuePairs request parameters
         try {
-        UrlEncodedFormEntity form;
+            HttpClient httpclient = new DefaultHttpClient();
+            String baseUrl = "http://pto-udv.bws.dk:24334/api/card?";
+            String paramUrl = URLEncoder.encode("&firstName=" + _card.getFirstname() + "&lastName=" + _card.getLastname() + "&address=" + _card.getAddress() + "&phoneNumber=" + _card.getPhonenumber() + "&fax=" + _card.getFax() + "&country=" + _card.getCountry() + "&city=" + _card.getCity() + "&postal=" + _card.getPostal() + "&company=" + _card.getCompany() + "&title=" + _card.getTitle() + "&email=" + _card.getEmail() + "&homepage=" + _card.getHomepage() + "&other=" + _card.getOther() + "&createdDate=" + _card.getCreatedDate() + "&createdUserId=" + _card.getCreatedUserId() + "&isDeleted=" + _card.getIsDeleted(), "UTF-8");
+            paramUrl = paramUrl.replace("%26","&");
+            paramUrl = paramUrl.replace("%3D","=");
+            HttpPost httppost = new HttpPost(baseUrl + paramUrl);
+            HttpResponse response = httpclient.execute(httppost);
 
-            form = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-
-        form.setContentEncoding(HTTP.UTF_8);
-        httppost.setEntity(form);
-
-        HttpResponse response = httpclient.execute(httppost);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            // Catch Protocol Exception
             e.printStackTrace();
         }
         return "";
     }
-    private static String multipost(String urlString, MultipartEntity reqEntity) {
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setUseCaches(false);
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
 
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.addRequestProperty("Content-length", reqEntity.getContentLength() + "");
-            conn.addRequestProperty(reqEntity.getContentType().getName(), reqEntity.getContentType().getValue());
+    public void postData() {
 
-            OutputStream os = conn.getOutputStream();
-            reqEntity.writeTo(conn.getOutputStream());
-            os.close();
-            conn.connect();
-
-            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                return readStream(conn.getInputStream());
-            }
-
-        } catch (Exception e) {
-//            Log.e(TAG, "multipart post error " + e + "(" + urlString + ")");
-        }
-        return null;
-    }
-
-    private static String readStream(InputStream in) {
-        BufferedReader reader = null;
-        StringBuilder builder = new StringBuilder();
-        try {
-            reader = new BufferedReader(new InputStreamReader(in));
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return builder.toString();
     }
 }
