@@ -24,36 +24,16 @@
         android:text="@string/lblUsername"
         android:layout_marginLeft="10dp"/>
     <EditText
-        android:id="@+id/txtUsername"
+        android:id="@+id/txtPhoneNumber"
         android:layout_below="@id/tool_bar"
         android:layout_width="fill_parent"
+        android:text="22410745"
         android:layout_height="wrap_content"
-        android:text=""
+        android:inputType="number"
         android:layout_marginRight="15dp"
         />
     </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp">
-        <TextView
-            android:layout_below="@id/tool_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lblPassword"
-            android:layout_marginLeft="10dp"/>
-        <EditText
-            android:id="@+id/txtPassword"
-            android:layout_below="@id/tool_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:text=""
-            android:layout_marginRight="15dp"
-            />
-    </LinearLayout>
+
     <Button
         android:id="@+id/btnLogin"
         android:layout_marginTop="10dp"

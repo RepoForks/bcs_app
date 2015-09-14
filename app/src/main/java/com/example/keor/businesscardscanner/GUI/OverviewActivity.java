@@ -1,5 +1,6 @@
 package com.example.keor.businesscardscanner.GUI;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,8 +23,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.keor.businesscardscanner.Controller.CardController;
+import com.example.keor.businesscardscanner.DAL.APICommunicator2;
 import com.example.keor.businesscardscanner.DAL.DAOBusinessCard;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
+import com.example.keor.businesscardscanner.Model.BEUser;
 import com.example.keor.businesscardscanner.R;
 
 import java.io.IOException;
@@ -35,21 +38,24 @@ public class OverviewActivity extends AppCompatActivity {
     CardAdapter adapter;
     ListView listCards;
     EditText txtSearch;
-    CardController cc;
+    BEUser _loggedUser;
+    CardController _cardController;
     ArrayList<BEBusinessCard> cards;
+    APICommunicator2 _apiCommunicator;
+    boolean cameFromActivity = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
-        cc = CardController.getInstance(this);
-        cards = cc.getCards();
+        _cardController = CardController.getInstance(this);
+        _cardController.setContext(this);
+        _apiCommunicator = new APICommunicator2(this);
         findViews();
         initSettings();
-        setListeners();
         initToolbar();
-        populateList(cards);
+        _apiCommunicator.GetAllCardsByPhoneNumber(_loggedUser.getPhoneNumber());
         txtSearch.setVisibility(View.GONE);
     }
 
@@ -78,8 +84,9 @@ public class OverviewActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                cards = cc.getCardsByInput(txtSearch.getText().toString().toLowerCase());
-                populateList(cards);
+                cards = _cardController.getCardsByInput(txtSearch.getText().toString().toLowerCase());
+                if (!cameFromActivity)
+                    setList(cards);
             }
         });
 
@@ -96,19 +103,20 @@ public class OverviewActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        cameFromActivity = true;
         clearSearchField();
+
     }
 
     private void clearSearchField() {
         txtSearch.setText("");
+        if (cameFromActivity == true)
+            _apiCommunicator.GetAllCardsByPhoneNumber(_loggedUser.getPhoneNumber());
     }
 
-    private void populateList(ArrayList<BEBusinessCard> c) {
-        adapter = new CardAdapter(this, R.layout.cell,c);
-        listCards.setAdapter(adapter);
-    }
 
     private void initSettings() {
+        _loggedUser = GUIConstants.LOGGED_USER;
     }
 
     private void findViews() {
@@ -163,11 +171,26 @@ public class OverviewActivity extends AppCompatActivity {
             txtSearch.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(txtSearch, InputMethodManager.SHOW_IMPLICIT);
-        }
-        else {
-            txtSearch.startAnimation(AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right));
+        } else {
+            txtSearch.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right));
             clearSearchField();
             txtSearch.setVisibility(View.GONE);
         }
+    }
+
+    public void setCardList(ArrayList<BEBusinessCard> cards) {
+        this.cards = cards;
+        _cardController.setCards(cards);
+        setList(cards);
+        setListeners();
+    }
+
+    private void setList(ArrayList<BEBusinessCard> cards) {
+        adapter = new CardAdapter(this, R.layout.cell, cards);
+        listCards.setAdapter(adapter);
+    }
+
+    public void onSuccessCardDelete() {
+        Toast.makeText(this,"Card successfully deleted",Toast.LENGTH_SHORT).show();
     }
 }

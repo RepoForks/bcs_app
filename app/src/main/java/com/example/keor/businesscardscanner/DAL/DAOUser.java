@@ -12,43 +12,25 @@ import com.example.keor.businesscardscanner.Model.BEUser;
  */
 public class DAOUser {
     Context _context;
-    SQLiteDatabase _db;
-    SQLiteStatement _sql;
-    String _INSERT = "INSERT INTO " + DAConstants.TABLE_USER + "(Username, Password) VALUES (?, ?)";
+    APICommunicator2 _apiCommunicator;
+
 
     public DAOUser(Context context) {
         _context = context;
-        OpenHelper openHelper = new OpenHelper(_context);
-        _db = openHelper.getWritableDatabase();
+        _apiCommunicator = new APICommunicator2(_context);
     }
 
-    public long insert(String username, String password) {
-        _sql = _db.compileStatement(_INSERT);
-        _sql.bindString(1, username);
-        _sql.bindString(2, password);
-        return _sql.executeInsert();
+    public void createUser(String phoneNumber) {
+        _apiCommunicator.createUser(phoneNumber);
     }
 
-    public boolean login(String username, String password) {
-        Cursor cursor = _db.query(DAConstants.TABLE_USER, new String[]{ "Username", "Password"}, "Username=? and Password=?", new String[]{"" + username, "" + password}, null, null, null);
-        if (cursor.moveToFirst()) {
-            return true;
-        }
-        return false;
+    public void login(String phoneNumber) {
+         _apiCommunicator.login(phoneNumber);
     }
 
     public BEUser getUserById(int id) {
         BEUser tmp;
-        Cursor cursor = _db.query(DAConstants.TABLE_USER, new String[]{"Id", "Username", "Password"}, "Id=?", new String[]{"" + id}, null, null, null);
-        if (cursor.moveToFirst()) {
-            tmp = new BEUser(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
-        }
-        else {
-            tmp = new BEUser(-1,"","");
-        }
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
+        tmp = null;
         return tmp;
     }
 }

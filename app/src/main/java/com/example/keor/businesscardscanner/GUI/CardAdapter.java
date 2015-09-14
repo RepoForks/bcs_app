@@ -65,7 +65,6 @@ public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // SHOULD NOW WORK
                         cc.deleteCard(cards.get(position));
-                        Toast.makeText(getContext(), "Business card deleted", Toast.LENGTH_SHORT).show();
                         cards.remove(position);
                         notifyDataSetChanged();
                     }

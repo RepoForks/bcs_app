@@ -1,4 +1,4 @@
-package com.example.keor.businesscardscanner.GUI;
+package com.example.keor.businesscardscanner.DAL;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -67,9 +67,5 @@ public class APICommunicator extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         }
         return "";
-    }
-
-    public void postData() {
-
     }
 }

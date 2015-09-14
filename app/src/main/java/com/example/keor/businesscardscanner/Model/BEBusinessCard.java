@@ -1,5 +1,7 @@
 package com.example.keor.businesscardscanner.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,25 +9,42 @@ import java.io.Serializable;
  */
 public class BEBusinessCard implements Serializable {
 
+    @SerializedName("Id")
     private int m_id;
+    @SerializedName("Firstname")
     private String m_firstname;
+    @SerializedName("Lastname")
     private String m_lastname;
+    @SerializedName("Address")
     private String m_address;
+    @SerializedName("Phonenumber")
     private String m_phonenumber;
+    @SerializedName("Country")
     private String m_country;
+    @SerializedName("City")
     private String m_city;
+    @SerializedName("Company")
     private String m_company;
+    @SerializedName("Title")
     private String m_title;
+    @SerializedName("Homepage")
     private String m_homepage;
+    @SerializedName("Postal")
     private String m_postal;
+    @SerializedName("Fax")
     private String m_fax;
+    @SerializedName("Email")
     private String m_email;
+    @SerializedName("Other")
     private String m_other;
+    @SerializedName("EncodedImage")
     private String m_encodedImage;
+    @SerializedName("CreatedDate")
     private String m_createdDate;
+    @SerializedName("CreatedUserId")
     private int m_createdUserId;
+    @SerializedName("IsDeleted")
     private boolean m_isDeleted;
-    private String viewentry;
 
     public BEBusinessCard() {
 
@@ -223,7 +242,4 @@ public class BEBusinessCard implements Serializable {
         return getFirstname() + " " + getLastname();
     }
 
-    public String getViewentry() {
-        return viewentry;
-    }
 }

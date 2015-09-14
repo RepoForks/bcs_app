@@ -22,6 +22,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.example.keor.businesscardscanner.Controller.CardController;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
 
@@ -43,6 +44,7 @@ public class ScanActivity extends AppCompatActivity {
     Button btnOCR;
     private SliderLayout mDemoSlider;
     ProgressDialog progress;
+    CardController _cardController;
 
     ArrayList<String> pictureLocation;
     ArrayList<Bitmap> pictures;
@@ -51,10 +53,12 @@ public class ScanActivity extends AppCompatActivity {
     String selectedBitmapPath;
     BEBusinessCard createdCard = null;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        _cardController = CardController.getInstance(this);
         findViews();
         setListeners();
         initSettings();
@@ -338,7 +342,11 @@ public class ScanActivity extends AppCompatActivity {
             if (response.contains("URL;WORK;CHARSET=utf-8:")) {
 
             }
+
             createdCard = card;
+            createdCard.setCreatedUserId(GUIConstants.LOGGED_USER.getId());
+            String s = _cardController.encodeToBase64(loadImage(selectedBitmapPath));
+            createdCard.setEncodedImage(s);
             btnOCR.setEnabled(true);
             progress.dismiss();
             continueToOverview();

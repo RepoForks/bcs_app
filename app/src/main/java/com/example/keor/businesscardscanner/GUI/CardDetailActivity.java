@@ -1,5 +1,6 @@
 package com.example.keor.businesscardscanner.GUI;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,13 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.example.keor.businesscardscanner.Controller.CardController;
 import com.example.keor.businesscardscanner.Model.BEBusinessCard;
 import com.example.keor.businesscardscanner.R;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CardDetailActivity extends AppCompatActivity {
 
@@ -33,8 +34,9 @@ public class CardDetailActivity extends AppCompatActivity {
     private EditText txtEmail;
     private EditText txtPostal;
     private EditText txtFax;
-    private CardController cc;
+    private CardController _cardController;
     private Button btnSave;
+    SimpleDateFormat sdf;
 
     private boolean saveState;
 
@@ -43,14 +45,16 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
         Bundle b = getIntent().getExtras();
-        _card = (BEBusinessCard)  b.getSerializable(GUIConstants.CARD);
+        sdf = new SimpleDateFormat("dd-MM-yyyy");
+        _card = (BEBusinessCard) b.getSerializable(GUIConstants.CARD);
         saveState = b.getBoolean(GUIConstants.SAVE_STATE);
+        _cardController = CardController.getInstance(this);
+        _cardController.setContext(this);
         findViews();
         populateData();
         initToolbar();
         initListeners();
         initSettings();
-        cc = CardController.getInstance(this);
     }
 
     private void initListeners() {
@@ -59,18 +63,15 @@ public class CardDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 updateCurrentCard();
                 if (!saveState) {
-                    cc.saveCard(_card);
-                    finish();
-                }
-                else
-                    //cc.createCard(_card);
-                    finish();
+                    _cardController.updateCard(_card);
+                } else
+                    _card.setCreatedDate(sdf.format(new Date()));
+                    _cardController.postCard(_card);
             }
         });
     }
 
     private void initSettings() {
-
     }
 
     private void populateData() {
@@ -129,16 +130,17 @@ public class CardDetailActivity extends AppCompatActivity {
         if (id == R.id.action_save_card) {
             updateCurrentCard();
             if (!saveState) {
-                cc.saveCard(_card);
-                finish();
+                _cardController.updateCard(_card);
+
+            } else {
+                _card.setCreatedDate(sdf.format(new Date()));
+                _cardController.postCard(_card);
+
             }
-            else{
-            cc.postCard(_card);
-            finish();
-			}
-		}
+        }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void updateCurrentCard() {
         _card.setFirstname(txtFirstName.getText().toString());
@@ -153,5 +155,11 @@ public class CardDetailActivity extends AppCompatActivity {
         _card.setPostal(txtPostal.getText().toString());
         _card.setFax(txtFax.getText().toString());
         _card.setEmail(txtEmail.getText().toString());
+    }
+    public void kill(){
+        Intent overviewIntent = new Intent();
+        overviewIntent.setClass(this, OverviewActivity.class);
+        startActivity(overviewIntent);
+        finish();
     }
 }

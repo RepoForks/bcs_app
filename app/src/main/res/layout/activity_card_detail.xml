@@ -57,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint=""
+                android:maxLength="50"
                 android:singleLine="true" />
                 </LinearLayout>
         </LinearLayout>
@@ -87,6 +88,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="50"
                     android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
@@ -140,6 +142,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="50"
                     android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
@@ -162,6 +165,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="50"
                     android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
@@ -189,6 +193,7 @@
                 <EditText
                     android:id="@+id/txtEmail"
                     android:layout_width="fill_parent"
+                    android:maxLength="100"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint=""
@@ -231,6 +236,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLength="100"
                 android:hint=""
                 android:singleLine="true" />
                 </LinearLayout>
@@ -260,6 +266,7 @@
                     android:id="@+id/txtAddress"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="50"
                     android:layout_weight="1"
                     android:hint=""
                     android:singleLine="true" />
@@ -281,6 +288,7 @@
                 <EditText
                     android:id="@+id/txtPostal"
                     android:layout_width="fill_parent"
+                    android:maxLength="10"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint=""
@@ -312,6 +320,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="50"
                     android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
@@ -333,7 +342,9 @@
                     android:id="@+id/txtCountry"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+
                     android:layout_weight="1"
+                    android:maxLength="50"
                     android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
@@ -363,6 +374,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLength="100"
                     android:hint=""
                     android:singleLine="true" />
             </LinearLayout>
