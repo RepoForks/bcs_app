@@ -1,11 +1,8 @@
 package com.example.keor.businesscardscanner.DAL;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.keor.businesscardscanner.Controller.UserController;
 import com.example.keor.businesscardscanner.GUI.CardDetailActivity;
 import com.example.keor.businesscardscanner.GUI.GUIConstants;
 import com.example.keor.businesscardscanner.GUI.LoginActivity;
@@ -17,7 +14,6 @@ import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
@@ -28,23 +24,14 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by keor on 07-09-2015.
@@ -170,7 +157,6 @@ public class APICommunicator2 {
 
     private ArrayList<BEBusinessCard> getCardsFromJson(JSONArray jsonString) throws JSONException {
         ArrayList cards = new ArrayList();
-
 
         for (int i = 0; i < jsonString.length(); i++){
             JSONObject obj = jsonString.getJSONObject(i);
