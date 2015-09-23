@@ -72,13 +72,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onClickBtnLogin() {
-        _userController.login(txtPhoneNumber.getText().toString());
+        int result = _userController.login(txtPhoneNumber.getText().toString());
 
-        progress = new ProgressDialog(this);
-        progress.setTitle("Login");
-        progress.setMessage("Checking login information...");
-        progress.setCancelable(false);
-        progress.show();
+        switch (result) {
+            case GUIConstants.RESULT_LOGIN_SUCCESS:
+                loginSuccess();
+                break;
+            case GUIConstants.RESULT_USER_NOT_EXISTING:
+                userNotExistPrompt();
+                break;
+            case GUIConstants.RESULT_CONNECTION_TIMEOUT:
+                showConnectionFailedMessage();
+                break;
+            case GUIConstants.RESULT_WRONG_CREDENTIALS:
+                loginFail();
+                break;
+            default:
+                unknownError();
+                break;
+        }
     }
 
     private void findViews() {
@@ -91,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
     private void initToolbar() {
         toolbar.setTitle("Login");
         toolbar.setTitleTextColor(Color.WHITE);
-        //toolbar.setNavigationIcon(R.drawable.ic_login);
         setSupportActionBar(toolbar);
     }
 
@@ -117,6 +128,14 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void showLoginProgress() {
+        progress = new ProgressDialog(this);
+        progress.setTitle("Login");
+        progress.setMessage("Checking login information...");
+        progress.setCancelable(false);
+        progress.show();
+    }
+
     public void loginSuccess() {
         progress.dismiss();
         Intent overviewIntent = new Intent();
@@ -131,7 +150,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void setLoggedUser(BEUser user) {
         GUIConstants.LOGGED_USER = user;
-
     }
 
     public void userExistsPrompt() {
@@ -141,5 +159,15 @@ public class LoginActivity extends AppCompatActivity {
     public void userNotExistPrompt() {
         progress.dismiss();
         Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void showConnectionFailedMessage() {
+        progress.dismiss();
+        Toast.makeText(this, "Could not establish connection.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void unknownError() {
+        progress.dismiss();
+        Toast.makeText(this, "Something wrong happened... oops", Toast.LENGTH_SHORT).show();
     }
 }

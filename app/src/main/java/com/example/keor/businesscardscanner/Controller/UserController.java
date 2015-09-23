@@ -31,8 +31,9 @@ public class UserController {
     public BEUser getUserById(int id) {
         return _daoUser.getUserById(id);
     }
-    public void login(String phoneNumber){
-         _daoUser.login(phoneNumber);
+
+    public int login(String phoneNumber){
+         return _daoUser.login(phoneNumber);
     }
 
     public void createUser(String phoneNumber) {

@@ -24,8 +24,8 @@ public class DAOUser {
         _apiCommunicator.createUser(phoneNumber);
     }
 
-    public void login(String phoneNumber) {
-         _apiCommunicator.login(phoneNumber);
+    public int login(String phoneNumber) {
+         return _apiCommunicator.login(phoneNumber);
     }
 
     public BEUser getUserById(int id) {
