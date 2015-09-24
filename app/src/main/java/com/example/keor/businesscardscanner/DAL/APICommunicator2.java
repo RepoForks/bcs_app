@@ -56,6 +56,7 @@ public class APICommunicator2 {
         _context = context;
         gson = new Gson();
     }
+
     public void setContext(Context context){
         _context = context;
     }
@@ -159,6 +160,7 @@ public class APICommunicator2 {
     private ArrayList<BEBusinessCard> getCardsFromJson(JSONArray jsonString) throws JSONException {
         ArrayList cards = new ArrayList();
 
+
         for (int i = 0; i < jsonString.length(); i++){
             JSONObject obj = jsonString.getJSONObject(i);
             BEBusinessCard card = gson.fromJson(String.valueOf(obj), BEBusinessCard.class);
@@ -213,12 +215,15 @@ public class APICommunicator2 {
                                     result[0] = GUIConstants.RESULT_LOGIN_SUCCESS;
                             }
                         });*/
+
                         GUIConstants.LOGGED_USER = GetUserByPhoneNumberJSON(phoneNumber);
                         if (GUIConstants.LOGGED_USER == null || GUIConstants.LOGGED_USER.getId() < 1)
                             result[0] = GUIConstants.RESULT_USER_NOT_EXISTING;
                         else
                             result[0] = GUIConstants.RESULT_LOGIN_SUCCESS;
                     } else {
+                    }
+                    else {
                         /*loginActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -236,6 +241,8 @@ public class APICommunicator2 {
                     String b = "";
                 } catch (Exception e) {
                     String b = "";
+                    // Catch Protocol Exception
+                    Log.d("Fejl",e.getMessage());
                 }
             }
         };

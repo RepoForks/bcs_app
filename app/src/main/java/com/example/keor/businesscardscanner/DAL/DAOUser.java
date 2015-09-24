@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteStatement;
 
 import com.example.keor.businesscardscanner.Model.BEUser;
 
+import java.net.SocketTimeoutException;
+
 /**
  * Created by keor on 27-08-2015.
  */
