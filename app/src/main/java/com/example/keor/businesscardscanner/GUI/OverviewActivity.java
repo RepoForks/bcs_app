@@ -51,6 +51,7 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
         _cardController = CardController.getInstance(this);
         _cardController.setContext(this);
+
         _apiCommunicator = new APICommunicator2(this);
         findViews();
         initSettings();
@@ -155,6 +156,11 @@ public class OverviewActivity extends AppCompatActivity {
         }
         if (id == R.id.action_search) {
             doSearchAnimation();
+            return true;
+        }
+        if (id == R.id.action_select_export) {
+            _cardController.CreateContacts(cards);
+            Toast.makeText(this, "Contacts exported", Toast.LENGTH_SHORT).show();
             return true;
         }
         /*if (id == R.id.action_select_delete) {

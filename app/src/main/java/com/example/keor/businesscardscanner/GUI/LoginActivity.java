@@ -142,4 +142,9 @@ public class LoginActivity extends AppCompatActivity {
         progress.dismiss();
         Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
     }
+
+    public void showConnectionTimeOutMessage() {
+        progress.dismiss();
+        Toast.makeText(this, "Could not establish connection.", Toast.LENGTH_SHORT).show();
+    }
 }

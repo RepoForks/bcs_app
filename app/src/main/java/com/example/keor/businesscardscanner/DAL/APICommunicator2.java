@@ -1,11 +1,8 @@
 package com.example.keor.businesscardscanner.DAL;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.keor.businesscardscanner.Controller.UserController;
 import com.example.keor.businesscardscanner.GUI.CardDetailActivity;
 import com.example.keor.businesscardscanner.GUI.GUIConstants;
 import com.example.keor.businesscardscanner.GUI.LoginActivity;
@@ -17,7 +14,6 @@ import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
@@ -28,23 +24,15 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by keor on 07-09-2015.
@@ -63,6 +51,7 @@ public class APICommunicator2 {
         _context = context;
         gson = new Gson();
     }
+
     public void setContext(Context context){
         _context = context;
 
@@ -90,6 +79,7 @@ public class APICommunicator2 {
         };
         t.start();
     }
+
     public void GetAllCardsByPhoneNumber(final String phoneNumber) {
         final OverviewActivity overviewActivity = (OverviewActivity) _context;
         cards = new ArrayList<>();
@@ -104,8 +94,6 @@ public class APICommunicator2 {
 
                 try
                 {
-
-
                     URL url = new URL(url2);
 
                     urlConnection = (HttpURLConnection) url.openConnection();
@@ -182,7 +170,6 @@ public class APICommunicator2 {
 
     }
 
-
     public void login(final String phoneNumber) {
         final LoginActivity loginActivity = (LoginActivity) _context;
         this.phoneNumber = phoneNumber;
@@ -192,6 +179,8 @@ public class APICommunicator2 {
                 try {
                     URL url = new URL(domainUrl + "/api/User/GetUserByPhoneNumber/" + phoneNumber);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    HttpURLConnection.setFollowRedirects(false);
+                    connection.setConnectTimeout(5 * 1000);
                     connection.setRequestMethod("GET");
                     connection.connect();
 
@@ -207,7 +196,8 @@ public class APICommunicator2 {
                                     loginSuccess();
                             }
                         });
-                    } else {
+                    }
+                    else {
                         loginActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -215,10 +205,10 @@ public class APICommunicator2 {
                             }
                         });
                     }
-
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     // Catch Protocol Exception
-
+                    Log.d("Fejl",e.getMessage());
                 }
             }
         };

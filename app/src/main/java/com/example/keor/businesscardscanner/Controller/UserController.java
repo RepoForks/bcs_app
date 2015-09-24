@@ -6,6 +6,7 @@ import com.example.keor.businesscardscanner.DAL.DAOUser;
 import com.example.keor.businesscardscanner.GUI.LoginActivity;
 import com.example.keor.businesscardscanner.Model.BEUser;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +19,7 @@ public class UserController {
 
     private UserController(Context context) {
         _context = context;
-       _daoUser = new DAOUser(_context);
+        _daoUser = new DAOUser(_context);
     }
 
     public static UserController getInstance(Context context) {
@@ -31,8 +32,9 @@ public class UserController {
     public BEUser getUserById(int id) {
         return _daoUser.getUserById(id);
     }
+
     public void login(String phoneNumber){
-         _daoUser.login(phoneNumber);
+        _daoUser.login(phoneNumber);
     }
 
     public void createUser(String phoneNumber) {
