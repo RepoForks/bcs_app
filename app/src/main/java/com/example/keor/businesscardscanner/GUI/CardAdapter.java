@@ -1,13 +1,20 @@
 package com.example.keor.businesscardscanner.GUI;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,7 +37,7 @@ import java.util.ArrayList;
 public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
     private ArrayList<BEBusinessCard> cards;
     private CardController cc;
-    private UserController uc;
+    private Context _context;
     private final int[] colours = {
             Color.parseColor("#B9ECFA"),
             Color.parseColor("#99DFF2")
@@ -40,9 +47,9 @@ public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
     public CardAdapter(Context context, int textViewResourceId,
                        ArrayList<BEBusinessCard> cards) {
         super(context, textViewResourceId, cards);
+        _context = context;
         this.cards = cards;
-        cc = CardController.getInstance(getContext());
-        uc = UserController.getInstance(getContext());
+        cc = CardController.getInstance(_context);
     }
 
     @Override
@@ -75,18 +82,17 @@ public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
         });
 
         v.setBackgroundColor(colours[position % colours.length]);
-        BEUser user;
         BEBusinessCard c = cards.get(position);
         try {
-            int id = c.getCreatedUserId();
-            user = uc.getUserById(id);
-            TextView createdBy = (TextView) v.findViewById(R.id.txtCreatedBy);
+            ImageView cardImage = (ImageView) v.findViewById(R.id.imgCard);
+            cardImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BEBusinessCard c = cards.get(position);
+                    ((OverviewActivity)_context).showCardDialog(c);
+                }
+            });
 
-            if(createdBy != null && user.getId() != -1) {
-                createdBy.setText("Created by\n"+user.getUsername());
-            }
-            else
-                createdBy.setText("");
         }
         catch (Exception e) {
         }
@@ -102,4 +108,6 @@ public class CardAdapter extends ArrayAdapter<BEBusinessCard> {
         }
         return v;
     }
+
+
 }

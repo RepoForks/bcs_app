@@ -1,6 +1,7 @@
 package com.example.keor.businesscardscanner.DAL;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.keor.businesscardscanner.GUI.CardDetailActivity;
@@ -30,9 +31,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by keor on 07-09-2015.
@@ -44,8 +48,8 @@ public class APICommunicator2 {
     String phoneNumber;
     BEBusinessCard _selectedCard;
     String domainUrl = "http://Dennis-Work.bws.dk:24334";
-    Gson gson;
     //String domainUrl = "http://pto-udv.bws.dk:24334";
+    Gson gson;
 
     public APICommunicator2(Context context) {
         _context = context;
@@ -54,7 +58,6 @@ public class APICommunicator2 {
 
     public void setContext(Context context){
         _context = context;
-
     }
 
     public void GetAllCards() {
@@ -65,9 +68,6 @@ public class APICommunicator2 {
                 String url = domainUrl + "/api/Card";
                 String[] allTexts;
                 final ArrayList<BEBusinessCard> cards = new ArrayList<>();
-
-
-
 
                 overviewActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -170,43 +170,52 @@ public class APICommunicator2 {
 
     }
 
-    public void login(final String phoneNumber) {
-        final LoginActivity loginActivity = (LoginActivity) _context;
+    public int login(final String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        final int[] result = {0};
 
         Thread t = new Thread() {
             public void run() {
                 try {
+                    Timer timer = new Timer();
+                    int timeOut = 5000;
                     URL url = new URL(domainUrl + "/api/User/GetUserByPhoneNumber/" + phoneNumber);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     HttpURLConnection.setFollowRedirects(false);
-                    connection.setConnectTimeout(5 * 1000);
+                    connection.setConnectTimeout(timeOut);
+                    connection.setReadTimeout(timeOut);
                     connection.setRequestMethod("GET");
+                    timer.schedule(
+                            new TimerTask() {
+                                @Override
+                                public void run() {
+                                    Looper.prepare();
+                                    connection.disconnect();
+                                    result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
+                                    return;
+                                }
+                            }, timeOut
+                    );
                     connection.connect();
 
                     final int code = connection.getResponseCode();
+                    timer.cancel();
                     if (code == 200) {
-                        loginActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                GUIConstants.LOGGED_USER = GetUserByPhoneNumberJSON(phoneNumber);
-                                if (GUIConstants.LOGGED_USER == null || GUIConstants.LOGGED_USER.getId() < 1)
-                                    loginActivity.userNotExistPrompt();
-                                else
-                                    loginSuccess();
-                            }
-                        });
+                        GUIConstants.LOGGED_USER = GetUserByPhoneNumberJSON(phoneNumber);
+                        if (GUIConstants.LOGGED_USER == null || GUIConstants.LOGGED_USER.getId() < 1)
+                            result[0] = GUIConstants.RESULT_USER_NOT_EXISTING;
+                        else
+                            result[0] = GUIConstants.RESULT_LOGIN_SUCCESS;
+                    } else {
+                        result[0] = GUIConstants.RESULT_WRONG_CREDENTIALS;
                     }
-                    else {
-                        loginActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginFail();
-                            }
-                        });
-                    }
-                }
-                catch (Exception e) {
+                } catch (SocketTimeoutException e) {
+                    result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
+                } catch (MalformedURLException e) {
+                    result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
+                } catch (IOException e) {
+                    result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
+                } catch (Exception e) {
                     // Catch Protocol Exception
                     Log.d("Fejl",e.getMessage());
                 }
@@ -218,6 +227,7 @@ public class APICommunicator2 {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return result[0];
     }
 
     private void loginSuccess() {
@@ -228,6 +238,16 @@ public class APICommunicator2 {
     private void loginFail() {
         LoginActivity loginActivity = (LoginActivity) _context;
         loginActivity.loginFail();
+    }
+
+    private void timedOut() {
+        LoginActivity loginActivity = (LoginActivity) _context;
+        loginActivity.showConnectionFailedMessage();
+    }
+
+    private void showLoginProgress() {
+        LoginActivity loginActivity = (LoginActivity) _context;
+        loginActivity.showLoginProgress();
     }
 
     public void updateCard(final BEBusinessCard _card) {
@@ -264,6 +284,11 @@ public class APICommunicator2 {
             }
         };
         t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteCard(final BEBusinessCard card){

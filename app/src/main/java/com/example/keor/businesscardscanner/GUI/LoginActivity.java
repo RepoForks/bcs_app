@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,10 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private Button btnRegister;
     private EditText txtPhoneNumber;
-    private EditText txtPassword;
     ProgressDialog progress;
     private UserController _userController;
-//    private DAOUser _daoUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         setListeners();
         initToolbar();
         _userController = UserController.getInstance(this);
-//        _daoUser = new DAOUser(this);
     }
 
     private void setListeners() {
@@ -72,13 +70,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onClickBtnLogin() {
-        _userController.login(txtPhoneNumber.getText().toString());
+        showLoginProgress();
+        int result = _userController.login(txtPhoneNumber.getText().toString());
 
-        progress = new ProgressDialog(this);
-        progress.setTitle("Login");
-        progress.setMessage("Checking login information...");
-        progress.setCancelable(false);
-        progress.show();
+        switch (result) {
+            case GUIConstants.RESULT_LOGIN_SUCCESS:
+                loginSuccess();
+                break;
+            case GUIConstants.RESULT_USER_NOT_EXISTING:
+                userNotExistPrompt();
+                break;
+            case GUIConstants.RESULT_CONNECTION_TIMEOUT:
+                showConnectionFailedMessage();
+                break;
+            case GUIConstants.RESULT_WRONG_CREDENTIALS:
+                loginFail();
+                break;
+            default:
+                unknownError();
+                break;
+        }
     }
 
     private void findViews() {
@@ -91,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
     private void initToolbar() {
         toolbar.setTitle("Login");
         toolbar.setTitleTextColor(Color.WHITE);
-        //toolbar.setNavigationIcon(R.drawable.ic_login);
         setSupportActionBar(toolbar);
     }
 
@@ -117,6 +127,14 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void showLoginProgress() {
+        progress = new ProgressDialog(this);
+        progress.setTitle("Login");
+        progress.setMessage("Checking login information...");
+        progress.setCancelable(false);
+        progress.show();
+    }
+
     public void loginSuccess() {
         progress.dismiss();
         Intent overviewIntent = new Intent();
@@ -126,16 +144,15 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void loginFail(){
         progress.dismiss();
-        Toast.makeText(this, "Wrong credentials", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Wrong credentials.", Toast.LENGTH_SHORT).show();
     }
 
     public void setLoggedUser(BEUser user) {
         GUIConstants.LOGGED_USER = user;
-
     }
 
     public void userExistsPrompt() {
-        Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "User already exists.", Toast.LENGTH_SHORT).show();
     }
 
     public void userNotExistPrompt() {
@@ -143,8 +160,13 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
     }
 
-    public void showConnectionTimeOutMessage() {
+    public void showConnectionFailedMessage() {
         progress.dismiss();
         Toast.makeText(this, "Could not establish connection.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void unknownError() {
+        progress.dismiss();
+        Toast.makeText(this, "Something wrong happened... oops!", Toast.LENGTH_SHORT).show();
     }
 }
