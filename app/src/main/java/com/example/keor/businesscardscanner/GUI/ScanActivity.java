@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -213,11 +215,19 @@ public class ScanActivity extends AppCompatActivity {
             options = new BitmapFactory.Options();
             options.inSampleSize = 2;
             Bitmap bitmap = BitmapFactory.decodeFile(imgPath, options);
+            if (bitmap.getHeight() > bitmap.getWidth())
+                bitmap = rotateBitmap(bitmap,270);
             return bitmap;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
     private void onClickBtnOCR() {

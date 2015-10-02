@@ -61,8 +61,6 @@ public class OCRCommunicator extends AsyncTask<Void, Void, String> {
         scanActivity.ConvertResponseToCard(response);
     }
 
-
-
     private static String multipost(String urlString, MultipartEntity reqEntity) {
         try {
             URL url = new URL(urlString);

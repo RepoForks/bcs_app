@@ -1,9 +1,13 @@
 package com.example.keor.businesscardscanner.GUI;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.widget.AdapterViewCompat;
@@ -11,14 +15,17 @@ import android.support.v7.internal.widget.AdapterViewCompat.OnItemClickListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -43,7 +50,6 @@ public class OverviewActivity extends AppCompatActivity {
     ArrayList<BEBusinessCard> cards;
     APICommunicator2 _apiCommunicator;
     boolean cameFromActivity = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +112,6 @@ public class OverviewActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         cameFromActivity = true;
         clearSearchField();
-
     }
 
     private void clearSearchField() {
@@ -114,7 +119,6 @@ public class OverviewActivity extends AppCompatActivity {
         if (cameFromActivity == true)
             _apiCommunicator.GetAllCardsByPhoneNumber(_loggedUser.getPhoneNumber());
     }
-
 
     private void initSettings() {
         _loggedUser = GUIConstants.LOGGED_USER;
@@ -199,4 +203,61 @@ public class OverviewActivity extends AppCompatActivity {
     public void onSuccessCardDelete() {
         Toast.makeText(this,"Card successfully deleted",Toast.LENGTH_SHORT).show();
     }
+
+    public void showCardDialog(BEBusinessCard card) {
+        try {
+            // Get screen size
+            Display display = this.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int screenWidth = size.x;
+            int screenHeight = size.y;
+            boolean scaleDown = false;
+
+            // Get target image size
+            Bitmap bitmap = _cardController.fromBase64(card.getEncodedImage());
+            double bitmapHeight = bitmap.getHeight();
+            double bitmapWidth = bitmap.getWidth();
+
+            // Scale the image down to fit perfectly into the screen
+            // The value (250 in this case) must be adjusted for phone/tables displays
+            while (bitmapHeight > (screenHeight - 100) || bitmapWidth > (screenWidth - 100)) {
+                bitmapHeight = bitmapHeight / 1.25;
+                bitmapWidth = bitmapWidth / 1.25;
+                scaleDown = true;
+            }
+            if (!scaleDown) {
+                while (bitmapHeight < (screenHeight - 250) && bitmapWidth < (screenWidth - 250)) {
+                    bitmapHeight = bitmapHeight * 1.25;
+                    bitmapWidth = bitmapWidth * 1.25;
+                }
+            }
+
+            bitmapHeight = Math.floor(bitmapHeight);
+            bitmapWidth = Math.floor(bitmapWidth);
+
+            // Create resized bitmap image
+            BitmapDrawable resizedBitmap = new BitmapDrawable(this.getResources(), Bitmap.createScaledBitmap(bitmap, (int)bitmapWidth, (int)bitmapHeight, false));
+
+            Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.card_image_dialog);
+
+            ImageView image = (ImageView) dialog.findViewById(R.id.imgCard);
+
+            // !!! Do here setBackground() instead of setImageDrawable() !!! //
+            image.setBackground(resizedBitmap);
+
+            // Without this line there is a very small border around the image (1px)
+            // In my opinion it looks much better without it, so the choice is up to you.
+            dialog.getWindow().setBackgroundDrawable(null);
+
+            // Show the dialog
+            dialog.show();
+        } catch (Exception e) {
+            e.getStackTrace();
+            Toast.makeText(this, "Could not generate image.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

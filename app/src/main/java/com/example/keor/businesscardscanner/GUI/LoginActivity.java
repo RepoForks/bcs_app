@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,10 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private Button btnRegister;
     private EditText txtPhoneNumber;
-    private EditText txtPassword;
     ProgressDialog progress;
     private UserController _userController;
-//    private DAOUser _daoUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         setListeners();
         initToolbar();
         _userController = UserController.getInstance(this);
-//        _daoUser = new DAOUser(this);
     }
 
     private void setListeners() {
@@ -72,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onClickBtnLogin() {
+        showLoginProgress();
         int result = _userController.login(txtPhoneNumber.getText().toString());
 
         switch (result) {
@@ -145,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void loginFail(){
         progress.dismiss();
-        Toast.makeText(this, "Wrong credentials", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Wrong credentials.", Toast.LENGTH_SHORT).show();
     }
 
     public void setLoggedUser(BEUser user) {
@@ -153,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void userExistsPrompt() {
-        Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "User already exists.", Toast.LENGTH_SHORT).show();
     }
 
     public void userNotExistPrompt() {
@@ -168,6 +167,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void unknownError() {
         progress.dismiss();
-        Toast.makeText(this, "Something wrong happened... oops", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Something wrong happened... oops!", Toast.LENGTH_SHORT).show();
     }
 }

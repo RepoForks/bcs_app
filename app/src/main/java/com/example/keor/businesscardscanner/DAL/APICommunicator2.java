@@ -3,7 +3,6 @@ package com.example.keor.businesscardscanner.DAL;
 import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.keor.businesscardscanner.GUI.CardDetailActivity;
 import com.example.keor.businesscardscanner.GUI.GUIConstants;
@@ -48,9 +47,9 @@ public class APICommunicator2 {
     Context _context;
     String phoneNumber;
     BEBusinessCard _selectedCard;
-    //String domainUrl = "http://Dennis-Work.bws.dk:24334";
+    String domainUrl = "http://Dennis-Work.bws.dk:24334";
+    //String domainUrl = "http://pto-udv.bws.dk:24334";
     Gson gson;
-    String domainUrl = "http://pto-udv.bws.dk:24334";
 
     public APICommunicator2(Context context) {
         _context = context;
@@ -171,10 +170,7 @@ public class APICommunicator2 {
 
     }
 
-
     public int login(final String phoneNumber) {
-        showLoginProgress();
-        //final LoginActivity loginActivity = (LoginActivity) _context;
         this.phoneNumber = phoneNumber;
         final int[] result = {0};
 
@@ -205,42 +201,21 @@ public class APICommunicator2 {
                     final int code = connection.getResponseCode();
                     timer.cancel();
                     if (code == 200) {
-                        /*loginActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                GUIConstants.LOGGED_USER = GetUserByPhoneNumberJSON(phoneNumber);
-                                if (GUIConstants.LOGGED_USER == null || GUIConstants.LOGGED_USER.getId() < 1)
-                                    result[0] = GUIConstants.RESULT_USER_NOT_EXISTING;
-                                else
-                                    result[0] = GUIConstants.RESULT_LOGIN_SUCCESS;
-                            }
-                        });*/
-
                         GUIConstants.LOGGED_USER = GetUserByPhoneNumberJSON(phoneNumber);
                         if (GUIConstants.LOGGED_USER == null || GUIConstants.LOGGED_USER.getId() < 1)
                             result[0] = GUIConstants.RESULT_USER_NOT_EXISTING;
                         else
                             result[0] = GUIConstants.RESULT_LOGIN_SUCCESS;
                     } else {
-                    }
-                    else {
-                        /*loginActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginFail();
-                            }
-                        });*/
                         result[0] = GUIConstants.RESULT_WRONG_CREDENTIALS;
                     }
-
-                } catch (java.net.SocketTimeoutException e) {
+                } catch (SocketTimeoutException e) {
                     result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
                 } catch (MalformedURLException e) {
-                    String s = "";
+                    result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
                 } catch (IOException e) {
-                    String b = "";
+                    result[0] = GUIConstants.RESULT_CONNECTION_TIMEOUT;
                 } catch (Exception e) {
-                    String b = "";
                     // Catch Protocol Exception
                     Log.d("Fejl",e.getMessage());
                 }
@@ -309,6 +284,11 @@ public class APICommunicator2 {
             }
         };
         t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteCard(final BEBusinessCard card){

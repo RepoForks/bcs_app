@@ -64,9 +64,10 @@ public class CardDetailActivity extends AppCompatActivity {
                 updateCurrentCard();
                 if (!saveState) {
                     _cardController.updateCard(_card);
-                } else
+                } else {
                     _card.setCreatedDate(sdf.format(new Date()));
                     _cardController.postCard(_card);
+                }
             }
         });
     }
@@ -135,7 +136,6 @@ public class CardDetailActivity extends AppCompatActivity {
             } else {
                 _card.setCreatedDate(sdf.format(new Date()));
                 _cardController.postCard(_card);
-
             }
         }
         return super.onOptionsItemSelected(item);

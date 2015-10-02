@@ -2,6 +2,7 @@ package com.example.keor.businesscardscanner.Controller;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.RemoteException;
 import android.util.Base64;
 import android.util.Log;
@@ -29,8 +30,8 @@ public class CardController {
     private static CardController instance = null;
     DAOBusinessCard daoBusinessCard;
     ArrayList<BEBusinessCard> cards;
-
     Context _context;
+
     private CardController(Context context) {
         _context = context;
         daoBusinessCard = new DAOBusinessCard(_context);
@@ -87,8 +88,15 @@ public class CardController {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         immagex.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();
-        String imageEncoded = Base64.encodeToString(b, Base64.URL_SAFE);
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
         return imageEncoded;
+    }
+
+    public Bitmap fromBase64(String input) throws Exception
+    {
+        input.replaceAll("=","~").replaceAll("/","_").replaceAll("\\+","-");
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
     public Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
@@ -102,7 +110,6 @@ public class CardController {
 
         return photo;
     }
-
 
     public void CreateContacts(ArrayList<BEBusinessCard> cards){
         for (BEBusinessCard card : cards){
